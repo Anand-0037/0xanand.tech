@@ -1,140 +1,174 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import type { ContactActionProps } from '@/lib/schemas';
+import type { ContactActionProps, Persona } from '@/lib/schemas';
 import { PORTFOLIO_DATA } from '@/lib/portfolio-data';
-import { Send, Briefcase, Code, CheckCircle } from 'lucide-react';
+import { Send, Briefcase, Rocket, Loader2 } from 'lucide-react';
 
 interface ContactActionComponentProps extends ContactActionProps {
-  onIntentChange?: (intent: 'hiring' | 'freelance') => void;
+  persona?: Persona;
 }
 
-export function ContactAction({ intent: initialIntent, prefilledMessage, onIntentChange }: ContactActionComponentProps) {
-  const [intent, setIntent] = useState(initialIntent);
+export function ContactAction({ intent, prefilledMessage, persona = 'unknown' }: ContactActionComponentProps) {
+  const [selectedIntent, setSelectedIntent] = useState<'hiring' | 'freelance'>(intent);
   const [message, setMessage] = useState(prefilledMessage || '');
-  const [submitted, setSubmitted] = useState(false);
-  const { profile } = PORTFOLIO_DATA;
+  const [isSending, setIsSending] = useState(false);
 
-  const handleIntentChange = (newIntent: 'hiring' | 'freelance') => {
-    setIntent(newIntent);
-    onIntentChange?.(newIntent);
-  };
+  const { profile } = PORTFOLIO_DATA;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Create mailto link with the message
-    const subject = intent === 'hiring'
-      ? 'Hiring Opportunity'
-      : 'Freelance Project Inquiry';
-    const mailtoLink = `mailto:${profile.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
-    window.open(mailtoLink, '_blank');
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 3000);
+    setIsSending(true);
+
+    // Simulate send delay
+    setTimeout(() => {
+      const subject = selectedIntent === 'hiring'
+        ? 'Job Opportunity Discussion'
+        : 'Freelance Project Inquiry';
+
+      const mailtoLink = `mailto:${profile.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
+      window.location.href = mailtoLink;
+      setIsSending(false);
+    }, 500);
   };
+
+  // Persona-specific colors
+  const colors = {
+    recruiter: {
+      active: 'bg-blue-500 text-white',
+      inactive: 'bg-slate-800/50 text-slate-400 hover:bg-slate-700/50',
+      button: 'btn-recruiter',
+      border: 'border-blue-500/20',
+      focusRing: 'focus:border-blue-500/50 focus:ring-blue-500/20',
+    },
+    founder: {
+      active: 'bg-rose-500 text-white',
+      inactive: 'bg-slate-800/50 text-slate-400 hover:bg-slate-700/50',
+      button: 'btn-founder',
+      border: 'border-rose-500/20',
+      focusRing: 'focus:border-rose-500/50 focus:ring-rose-500/20',
+    },
+    cto: {
+      active: 'bg-emerald-500 text-white',
+      inactive: 'bg-slate-800/50 text-slate-400 hover:bg-slate-700/50',
+      button: 'btn-cto',
+      border: 'border-emerald-500/20',
+      focusRing: 'focus:border-emerald-500/50 focus:ring-emerald-500/20',
+    },
+    unknown: {
+      active: 'bg-indigo-500 text-white',
+      inactive: 'bg-slate-800/50 text-slate-400 hover:bg-slate-700/50',
+      button: 'bg-indigo-500 hover:bg-indigo-600',
+      border: 'border-indigo-500/20',
+      focusRing: 'focus:border-indigo-500/50 focus:ring-indigo-500/20',
+    },
+  };
+
+  const color = colors[persona];
 
   return (
     <motion.section
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="glass rounded-xl p-6"
+      className={cn('glass-card rounded-2xl p-8 md:p-10 border', color.border)}
     >
-      <h2 className="text-xl font-semibold text-white mb-4">Get in Touch</h2>
+      <h2 className="text-2xl font-bold text-white mb-2">Get in Touch</h2>
+      <p className="text-slate-400 mb-8">
+        Ready to discuss opportunities? Choose what best describes your inquiry.
+      </p>
 
-      {/* Intent Toggle */}
-      <div className="flex gap-2 mb-6">
-        <button
-          type="button"
-          onClick={() => handleIntentChange('hiring')}
-          className={cn(
-            'flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg transition-all',
-            intent === 'hiring'
-              ? 'bg-indigo-500/30 border-2 border-indigo-500 text-indigo-300'
-              : 'bg-gray-800 border-2 border-transparent text-gray-400 hover:border-gray-600'
-          )}
-        >
-          <Briefcase size={18} />
-          <span className="font-medium">Hiring</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => handleIntentChange('freelance')}
-          className={cn(
-            'flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg transition-all',
-            intent === 'freelance'
-              ? 'bg-purple-500/30 border-2 border-purple-500 text-purple-300'
-              : 'bg-gray-800 border-2 border-transparent text-gray-400 hover:border-gray-600'
-          )}
-        >
-          <Code size={18} />
-          <span className="font-medium">Freelance</span>
-        </button>
-      </div>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Intent Toggle */}
+        <div className="flex gap-3">
+          {[
+            { value: 'hiring' as const, label: 'Hiring', icon: <Briefcase size={18} /> },
+            { value: 'freelance' as const, label: 'Freelance', icon: <Rocket size={18} /> },
+          ].map((option) => (
+            <motion.button
+              key={option.value}
+              type="button"
+              onClick={() => setSelectedIntent(option.value)}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className={cn(
+                'flex-1 flex items-center justify-center gap-2.5 py-4 rounded-xl font-medium transition-all border border-transparent',
+                selectedIntent === option.value
+                  ? color.active
+                  : color.inactive
+              )}
+            >
+              {option.icon}
+              {option.label}
+            </motion.button>
+          ))}
+        </div>
 
-      {/* Contact Form */}
-      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Message */}
         <div>
-          <label htmlFor="message" className="block text-sm text-gray-400 mb-2">
-            {intent === 'hiring'
-              ? 'Tell me about the role and your company'
-              : 'Describe your project idea'}
+          <label htmlFor="message" className="block text-sm font-medium text-slate-300 mb-3">
+            Your Message
           </label>
           <textarea
             id="message"
+            rows={5}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder={
-              intent === 'hiring'
-                ? "We're looking for a Full-Stack Engineer to join our team..."
-                : "I need help building an MVP for..."
+              selectedIntent === 'hiring'
+                ? "Tell me about the role and your team..."
+                : "Describe your project and timeline..."
             }
-            rows={4}
             className={cn(
-              'w-full px-4 py-3 rounded-lg bg-gray-900/50 border',
-              'text-white placeholder-gray-600',
-              'focus:outline-none focus:ring-2',
-              intent === 'hiring'
-                ? 'border-gray-700 focus:ring-indigo-500/50 focus:border-indigo-500'
-                : 'border-gray-700 focus:ring-purple-500/50 focus:border-purple-500',
-              'resize-none transition-all'
+              'w-full rounded-xl p-4 resize-none',
+              'bg-slate-900/60 border border-slate-700/50',
+              'text-white placeholder-slate-500',
+              'focus:outline-none focus:ring-2 transition-all',
+              color.focusRing
             )}
           />
         </div>
 
+        {/* Submit */}
         <motion.button
           type="submit"
-          whileHover={{ scale: 1.02 }}
+          disabled={isSending}
+          whileHover={{ scale: 1.02, y: -2 }}
           whileTap={{ scale: 0.98 }}
-          disabled={submitted}
           className={cn(
-            'w-full flex items-center justify-center gap-2 py-3 px-6 rounded-lg font-medium transition-all',
-            submitted
-              ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-              : intent === 'hiring'
-                ? 'bg-indigo-500 hover:bg-indigo-600 text-white'
-                : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white'
+            'w-full py-4 rounded-xl font-semibold text-white',
+            'flex items-center justify-center gap-3',
+            'transition-all shadow-lg',
+            isSending ? 'bg-slate-700 cursor-wait' : color.button
           )}
         >
-          {submitted ? (
-            <>
-              <CheckCircle size={18} />
-              <span>Opening Email Client...</span>
-            </>
-          ) : (
-            <>
-              <Send size={18} />
-              <span>Send Message</span>
-            </>
-          )}
+          <AnimatePresence mode="wait">
+            {isSending ? (
+              <motion.span
+                key="sending"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex items-center gap-2"
+              >
+                <Loader2 className="animate-spin" size={20} />
+                Opening Mail...
+              </motion.span>
+            ) : (
+              <motion.span
+                key="send"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex items-center gap-2"
+              >
+                <Send size={20} />
+                Send Message
+              </motion.span>
+            )}
+          </AnimatePresence>
         </motion.button>
       </form>
-
-      {/* Quick Info */}
-      <div className="mt-6 pt-4 border-t border-gray-700/50">
-        <p className="text-sm text-gray-500 text-center">
-          Response time: Usually within 24 hours
-        </p>
-      </div>
     </motion.section>
   );
 }

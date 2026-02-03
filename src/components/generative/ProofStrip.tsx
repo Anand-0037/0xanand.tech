@@ -1,31 +1,58 @@
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import type { ProofStripProps } from '@/lib/schemas';
-import { Award, Star, Zap, Users } from 'lucide-react';
+import type { ProofStripProps, Persona } from '@/lib/schemas';
+import { Award, Star, Clock, Users } from 'lucide-react';
 
-const defaultMetrics = [
-  { icon: <Award size={20} />, value: '4+', label: 'Projects Shipped' },
-  { icon: <Star size={20} />, value: '2', label: 'Dual Degrees' },
-  { icon: <Zap size={20} />, value: '<30s', label: 'Build Speed' },
-  { icon: <Users size={20} />, value: 'GSoC', label: '2026 Target' },
+interface ProofStripComponentProps extends ProofStripProps {
+  persona?: Persona;
+}
+
+const metricIcons = [
+  { icon: <Clock size={18} />, label: 'Years Experience' },
+  { icon: <Award size={18} />, label: 'Hackathon Wins' },
+  { icon: <Star size={18} />, label: 'Response Time' },
+  { icon: <Users size={18} />, label: 'Achievement' },
 ];
 
-export function ProofStrip({ metrics: _metrics, style }: ProofStripProps) {
+export function ProofStrip({ metrics, style, persona = 'unknown' }: ProofStripComponentProps) {
   const containerVariants = {
-    hidden: { opacity: 0, y: -10 },
+    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      y: 0,
-      transition: {
-        staggerChildren: 0.1,
-      },
+      transition: { staggerChildren: 0.1 },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: { opacity: 1, scale: 1 },
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0 },
   };
+
+  // Persona-specific colors
+  const colors = {
+    recruiter: {
+      icon: 'text-blue-400',
+      value: 'from-blue-400 to-purple-400',
+      bg: 'from-blue-500/10 to-purple-500/5',
+    },
+    founder: {
+      icon: 'text-rose-400',
+      value: 'from-rose-400 to-orange-400',
+      bg: 'from-rose-500/10 to-orange-500/5',
+    },
+    cto: {
+      icon: 'text-emerald-400',
+      value: 'from-emerald-400 to-cyan-400',
+      bg: 'from-emerald-500/10 to-cyan-500/5',
+    },
+    unknown: {
+      icon: 'text-indigo-400',
+      value: 'from-indigo-400 to-purple-400',
+      bg: 'from-indigo-500/10 to-purple-500/5',
+    },
+  };
+
+  const color = colors[persona];
 
   return (
     <motion.section
@@ -33,46 +60,42 @@ export function ProofStrip({ metrics: _metrics, style }: ProofStripProps) {
       initial="hidden"
       animate="visible"
       className={cn(
-        'rounded-xl overflow-hidden',
-        style === 'minimal' && 'glass py-4 px-6',
-        style === 'prominent' && 'bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-pink-500/20 border border-purple-500/30 py-6 px-8'
+        'rounded-2xl overflow-hidden',
+        style === 'prominent' && cn('glass-card p-6 bg-gradient-to-r', color.bg),
+        style === 'minimal' && 'glass p-4'
       )}
     >
-      <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
-        {defaultMetrics.map((metric, index) => (
+      <div className={cn(
+        'grid gap-4',
+        style === 'prominent' ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-4'
+      )}>
+        {metrics.map((metric, index) => (
           <motion.div
             key={index}
             variants={itemVariants}
+            whileHover={{ scale: 1.05, y: -2 }}
             className={cn(
-              'flex items-center gap-3',
-              style === 'prominent' && 'flex-col text-center'
+              'text-center',
+              style === 'prominent' && 'p-4 rounded-xl bg-slate-900/40 border border-slate-700/30'
             )}
           >
+            {style === 'prominent' && (
+              <div className={cn('flex justify-center mb-3', color.icon)}>
+                {metricIcons[index]?.icon}
+              </div>
+            )}
             <div className={cn(
-              'text-indigo-400',
-              style === 'prominent' && 'p-3 rounded-full bg-indigo-500/20'
+              'font-bold bg-gradient-to-r bg-clip-text text-transparent',
+              color.value,
+              style === 'prominent' ? 'text-3xl' : 'text-xl'
             )}>
-              {metric.icon}
+              {metric}
             </div>
-            <div className={cn(
-              style === 'minimal' && 'flex items-baseline gap-2',
-              style === 'prominent' && 'space-y-1'
-            )}>
-              <span className={cn(
-                'font-bold',
-                style === 'minimal' && 'text-xl text-white',
-                style === 'prominent' && 'text-2xl md:text-3xl gradient-text'
-              )}>
-                {metric.value}
-              </span>
-              <span className={cn(
-                'text-gray-400',
-                style === 'minimal' && 'text-sm',
-                style === 'prominent' && 'text-xs uppercase tracking-wider'
-              )}>
-                {metric.label}
-              </span>
-            </div>
+            {style === 'prominent' && (
+              <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">
+                {metricIcons[index]?.label}
+              </div>
+            )}
           </motion.div>
         ))}
       </div>

@@ -1,11 +1,46 @@
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import type { AdaptiveHeroProps } from '@/lib/schemas';
+import type { Persona } from '@/lib/schemas';
 import { PORTFOLIO_DATA } from '@/lib/portfolio-data';
-import { Github, Linkedin, Mail, MapPin } from 'lucide-react';
+import { Github, Linkedin, Mail, MapPin, ExternalLink } from 'lucide-react';
 
-export function AdaptiveHero({ headline, subtext, vibe }: AdaptiveHeroProps) {
+interface AdaptiveHeroComponentProps extends AdaptiveHeroProps {
+  persona?: Persona;
+}
+
+export function AdaptiveHero({ headline, subtext, vibe, persona = 'unknown' }: AdaptiveHeroComponentProps) {
   const { profile, socials } = PORTFOLIO_DATA;
+
+  // Persona-specific accent colors
+  const accentColors = {
+    recruiter: {
+      primary: 'from-blue-500 to-purple-600',
+      text: 'text-gradient-blue',
+      glow: 'shadow-blue-500/20',
+      badge: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+    },
+    founder: {
+      primary: 'from-rose-500 to-orange-500',
+      text: 'text-gradient-orange',
+      glow: 'shadow-rose-500/20',
+      badge: 'bg-rose-500/20 text-rose-400 border-rose-500/30',
+    },
+    cto: {
+      primary: 'from-emerald-500 to-cyan-500',
+      text: 'text-gradient-green',
+      glow: 'shadow-emerald-500/20',
+      badge: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+    },
+    unknown: {
+      primary: 'from-slate-500 to-slate-600',
+      text: 'text-white',
+      glow: 'shadow-slate-500/20',
+      badge: 'bg-slate-500/20 text-slate-400 border-slate-500/30',
+    },
+  };
+
+  const colors = accentColors[persona];
 
   return (
     <motion.section
@@ -13,29 +48,50 @@ export function AdaptiveHero({ headline, subtext, vibe }: AdaptiveHeroProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
       className={cn(
-        'relative overflow-hidden rounded-2xl p-8 md:p-12',
-        vibe === 'corporate' && 'glass',
-        vibe === 'startup' && 'bg-gradient-to-br from-indigo-900/40 via-purple-900/30 to-pink-900/20 border border-purple-500/20'
+        'relative overflow-hidden rounded-3xl p-8 md:p-16 border transition-all duration-500',
+        vibe === 'corporate' && 'glass-card border-slate-700/50',
+        vibe === 'startup' && cn(
+          'glass-card border-rose-500/20',
+          'bg-gradient-to-br from-rose-950/30 via-orange-950/20 to-slate-950/30'
+        )
       )}
     >
-      {/* Background decoration */}
-      {vibe === 'startup' && (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-32 -right-32 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl" />
-          <div className="absolute -bottom-32 -left-32 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl" />
-        </div>
-      )}
+      {/* Decorative gradient orb */}
+      <div className={cn(
+        "absolute -top-24 -right-24 w-48 h-48 rounded-full blur-3xl opacity-30 transition-colors duration-1000",
+        `bg-gradient-to-br ${colors.primary}`
+      )} />
 
       <div className="relative z-10">
+        {/* Status Badge */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.1, duration: 0.5 }}
+          className={cn(
+            'inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium mb-6 border',
+            colors.badge
+          )}
+        >
+          <span className={cn(
+            "w-2 h-2 rounded-full animate-pulse",
+            persona === 'recruiter' && "bg-blue-400",
+            persona === 'founder' && "bg-rose-400",
+            persona === 'cto' && "bg-emerald-400",
+            persona === 'unknown' && "bg-slate-400"
+          )} />
+          {profile.availability}
+        </motion.div>
+
         {/* Headline */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.5 }}
+          transition={{ delay: 0.15, duration: 0.5 }}
           className={cn(
-            'font-bold leading-tight mb-4',
-            vibe === 'corporate' && 'text-4xl md:text-5xl text-white',
-            vibe === 'startup' && 'text-5xl md:text-6xl lg:text-7xl gradient-text'
+            'font-bold leading-tight mb-4 tracking-tight',
+            vibe === 'corporate' && 'text-4xl md:text-6xl text-white',
+            vibe === 'startup' && cn('text-5xl md:text-7xl', colors.text)
           )}
         >
           {headline || profile.name}
@@ -45,11 +101,11 @@ export function AdaptiveHero({ headline, subtext, vibe }: AdaptiveHeroProps) {
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
+          transition={{ delay: 0.25, duration: 0.5 }}
           className={cn(
-            'mb-6 max-w-2xl',
-            vibe === 'corporate' && 'text-lg text-gray-300',
-            vibe === 'startup' && 'text-xl md:text-2xl text-gray-200 font-light'
+            'mb-8 max-w-2xl leading-relaxed',
+            vibe === 'corporate' && 'text-lg text-slate-300',
+            vibe === 'startup' && 'text-xl md:text-2xl text-slate-200 font-light'
           )}
         >
           {subtext || profile.tagline}
@@ -59,16 +115,17 @@ export function AdaptiveHero({ headline, subtext, vibe }: AdaptiveHeroProps) {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-          className="flex flex-wrap gap-4 mb-8"
+          transition={{ delay: 0.35, duration: 0.5 }}
+          className="flex flex-wrap gap-6 mb-8"
         >
-          <span className="flex items-center gap-2 text-sm text-gray-400">
-            <MapPin size={16} className="text-indigo-400" />
+          <span className="flex items-center gap-2 text-sm text-slate-400">
+            <MapPin size={16} className={cn(
+              persona === 'recruiter' && "text-blue-400",
+              persona === 'founder' && "text-rose-400",
+              persona === 'cto' && "text-emerald-400",
+              persona === 'unknown' && "text-indigo-400"
+            )} />
             {profile.location}
-          </span>
-          <span className="flex items-center gap-2 text-sm text-emerald-400">
-            <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-            {profile.availability}
           </span>
         </motion.div>
 
@@ -76,43 +133,31 @@ export function AdaptiveHero({ headline, subtext, vibe }: AdaptiveHeroProps) {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-          className="flex gap-4"
+          transition={{ delay: 0.45, duration: 0.5 }}
+          className="flex gap-3"
         >
-          <a
-            href={socials.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={cn(
-              'p-3 rounded-lg transition-all hover:scale-105',
-              vibe === 'corporate' && 'bg-gray-800 hover:bg-gray-700 text-gray-300',
-              vibe === 'startup' && 'bg-white/10 hover:bg-white/20 text-white'
-            )}
-          >
-            <Github size={20} />
-          </a>
-          <a
-            href={socials.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={cn(
-              'p-3 rounded-lg transition-all hover:scale-105',
-              vibe === 'corporate' && 'bg-gray-800 hover:bg-gray-700 text-gray-300',
-              vibe === 'startup' && 'bg-white/10 hover:bg-white/20 text-white'
-            )}
-          >
-            <Linkedin size={20} />
-          </a>
-          <a
-            href={`mailto:${profile.email}`}
-            className={cn(
-              'p-3 rounded-lg transition-all hover:scale-105',
-              vibe === 'corporate' && 'bg-gray-800 hover:bg-gray-700 text-gray-300',
-              vibe === 'startup' && 'bg-white/10 hover:bg-white/20 text-white'
-            )}
-          >
-            <Mail size={20} />
-          </a>
+          {[
+            { href: socials.github, icon: <Github size={20} />, label: 'GitHub' },
+            { href: socials.linkedin, icon: <Linkedin size={20} />, label: 'LinkedIn' },
+            { href: `mailto:${profile.email}`, icon: <Mail size={20} />, label: 'Email' },
+            { href: socials.website, icon: <ExternalLink size={20} />, label: 'Website' },
+          ].map((social) => (
+            <motion.a
+              key={social.label}
+              href={social.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.1, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              className={cn(
+                'p-3 rounded-xl transition-all duration-300 border',
+                'bg-slate-800/50 border-slate-700/50 text-slate-400',
+                'hover:border-slate-600 hover:text-white hover:bg-slate-700/50'
+              )}
+            >
+              {social.icon}
+            </motion.a>
+          ))}
         </motion.div>
       </div>
     </motion.section>

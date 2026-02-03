@@ -86,7 +86,7 @@ function App() {
 
   return (
     <div className={cn(
-      "min-h-screen transition-colors duration-1000 ease-in-out bg-gradient-to-b relative",
+      "min-h-screen transition-colors duration-[1500ms] ease-in-out bg-gradient-to-b relative",
       bgStyles[currentPersona]
     )}>
       {/* Noise Texture Overlay */}
@@ -201,6 +201,7 @@ function App() {
             <motion.button
               type="submit"
               disabled={isProcessing}
+              aria-label="Send Intent"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className={cn(

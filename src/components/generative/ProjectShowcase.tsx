@@ -2,7 +2,12 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import type { ProjectShowcaseProps, Persona } from '@/lib/schemas';
 import { PORTFOLIO_DATA, type Project } from '@/lib/portfolio-data';
-import { ExternalLink, Github, TrendingUp, Layers, ArrowUpRight } from 'lucide-react';
+import { Github, TrendingUp, Layers, ArrowUpRight } from 'lucide-react';
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
 
 interface ProjectShowcaseComponentProps extends ProjectShowcaseProps {
   persona?: Persona;
@@ -21,10 +26,7 @@ export function ProjectShowcase({ projectIds, emphasis, persona = 'unknown' }: P
     },
   };
 
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
-  };
+
 
   return (
     <motion.section
@@ -62,10 +64,7 @@ interface ProjectCardProps {
   persona: Persona;
 }
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
+
 
 function ProjectCard({ project, emphasis, variants, persona }: ProjectCardProps) {
   // Persona-specific colors

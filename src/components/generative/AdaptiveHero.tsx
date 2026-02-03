@@ -137,16 +137,17 @@ export function AdaptiveHero({ headline, subtext, vibe, persona = 'unknown' }: A
           className="flex gap-3"
         >
           {[
-            { href: socials.github, icon: <Github size={20} />, label: 'GitHub' },
-            { href: socials.linkedin, icon: <Linkedin size={20} />, label: 'LinkedIn' },
-            { href: `mailto:${profile.email}`, icon: <Mail size={20} />, label: 'Email' },
-            { href: socials.website, icon: <ExternalLink size={20} />, label: 'Website' },
+            { href: socials.github, icon: <Github size={20} />, label: 'GitHub', id: 'github' },
+            { href: socials.linkedin, icon: <Linkedin size={20} />, label: 'LinkedIn', id: 'linkedin' },
+            { href: `mailto:${profile.email}`, icon: <Mail size={20} />, label: 'Email', id: 'email' },
+            { href: socials.website, icon: <ExternalLink size={20} />, label: 'Website', id: 'website' },
           ].map((social) => (
             <motion.a
               key={social.label}
               href={social.href}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={`Visit ${social.label}`}
               whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.95 }}
               className={cn(

@@ -3,29 +3,35 @@ import { z } from 'zod';
 // LayoutShell Schema - Controls the overall page grid
 export const LayoutShellSchema = z.object({
   mode: z.enum(['resume', 'pitch', 'technical']).describe(
-    'Layout mode: resume for recruiters (vertical stack), pitch for founders (masonry grid), technical for CTOs (two-column)'
+    'The overall layout structure. "resume": vertical stack for recruiters. "pitch": masonry grid for founders/investors. "technical": two-column documentation style for CTOs.'
   ),
   emphasis: z.enum(['speed', 'depth']).describe(
-    'Content emphasis: speed for quick reads, depth for detailed exploration'
+    'Content density. "speed": scannable, high-level highlights (Recruiters/Founders). "depth": detailed technical deep-dives (CTOs).'
   ),
 });
 export type LayoutShellProps = z.infer<typeof LayoutShellSchema>;
 
 // AdaptiveHero Schema - Dynamic hero section
 export const AdaptiveHeroSchema = z.object({
-  headline: z.string().describe('Main headline text for the hero section'),
-  subtext: z.string().describe('Supporting text under the headline'),
+  headline: z.string().describe(
+    'The main H1 title. Should be "Anand [LastName]" for recruiters, or a role-based title like "Full-Stack Engineer" for technical roles.'
+  ),
+  subtext: z.string().describe(
+    'Supporting subtitle. Professional summary for recruiters, value proposition for founders, or tech stack highlights for CTOs.'
+  ),
   vibe: z.enum(['corporate', 'startup']).describe(
-    'Visual style: corporate for clean professional look, startup for bold dynamic style'
+    'Visual theme. "corporate": clean, stable, blue/slate tones (Recruiters/CTOs). "startup": bold, aggressive, high-contrast, neon accents (Founders).'
   ),
 });
 export type AdaptiveHeroProps = z.infer<typeof AdaptiveHeroSchema>;
 
 // SkillGrid Schema - Skills display
 export const SkillGridSchema = z.object({
-  skills: z.array(z.string()).describe('Array of skill names to display'),
+  skills: z.array(z.string()).describe(
+    'List of technical skills to display. For recruiters: high-level keywords (React, Node). For CTOs: specific tools/libraries (Redux, tRPC, Docker).'
+  ),
   focus: z.enum(['breadth', 'depth']).describe(
-    'Display mode: breadth for compact tags (recruiter), depth for detailed cards (CTO)'
+    'Visual format. "breadth": Compact tags/badges for quick scanning. "depth": Detailed cards with proficiency bars for technical evaluation.'
   ),
 });
 export type SkillGridProps = z.infer<typeof SkillGridSchema>;
@@ -33,19 +39,21 @@ export type SkillGridProps = z.infer<typeof SkillGridSchema>;
 // ProjectShowcase Schema - Project cards
 export const ProjectShowcaseSchema = z.object({
   projectIds: z.array(z.string()).describe(
-    'Array of project IDs from portfolio-data.ts to display'
+    'IDs of projects to render (e.g., "kaggle-ingest", "json-parser"). Select projects relevant to the persona (e.g., detailed backend systems for CTOs, product MVPs for Founders).'
   ),
   emphasis: z.enum(['outcomes', 'architecture']).describe(
-    'Display emphasis: outcomes for metrics/ROI (founder), architecture for tech details (CTO)'
+    'Content focus within cards. "outcomes": Business value, ROI, user metrics (Founders). "architecture": Tech stack, patterns, optimization (CTOs).'
   ),
 });
 export type ProjectShowcaseProps = z.infer<typeof ProjectShowcaseSchema>;
 
 // ProofStrip Schema - Credibility metrics
 export const ProofStripSchema = z.object({
-  metrics: z.array(z.string()).describe('Array of key metrics/achievements to display'),
+  metrics: z.array(z.string()).describe(
+    'Key achievements strings (e.g., "4+ Years Exp", "GSoC Winner"). Select stats that impress the specific persona.'
+  ),
   style: z.enum(['minimal', 'prominent']).describe(
-    'Display style: minimal for subtle, prominent for emphasized'
+    'Visual weight. "minimal": Subtle strip (Recruiters). "prominent": Large, bold numbers with icons (Founders/Startups).'
   ),
 });
 export type ProofStripProps = z.infer<typeof ProofStripSchema>;
@@ -53,10 +61,10 @@ export type ProofStripProps = z.infer<typeof ProofStripSchema>;
 // ContactAction Schema - Interactable contact form
 export const ContactActionSchema = z.object({
   intent: z.enum(['hiring', 'freelance']).describe(
-    'Contact intent: hiring for job opportunities, freelance for project work'
+    'Primary call-to-action intent. "hiring": Schedule interview/Download Resume. "freelance": Book consultation/Project inquiry.'
   ),
   prefilledMessage: z.string().optional().describe(
-    'Optional pre-filled message based on detected intent'
+    'Auto-generated message draft based on context. e.g., "I saw your backend projects and..."'
   ),
 });
 export type ContactActionProps = z.infer<typeof ContactActionSchema>;
@@ -67,9 +75,9 @@ export type Persona = z.infer<typeof PersonaSchema>;
 
 // Persona detection signals
 export const PERSONA_SIGNALS = {
-  recruiter: ['hire', 'hiring', 'resume', 'salary', 'position', 'role', 'candidate', 'interview', 'cv'],
-  founder: ['mvp', 'startup', 'funding', 'revenue', 'business', 'product', 'launch', 'build', 'scale'],
-  cto: ['architecture', 'scalability', 'codebase', 'stack', 'technical', 'system', 'infrastructure', 'api'],
+  recruiter: ['hire', 'hiring', 'resume', 'salary', 'position', 'role', 'candidate', 'interview', 'cv', 'job'],
+  founder: ['mvp', 'startup', 'funding', 'revenue', 'business', 'product', 'launch', 'build', 'scale', 'customers'],
+  cto: ['architecture', 'scalability', 'codebase', 'stack', 'technical', 'system', 'infrastructure', 'api', 'engineering'],
 };
 
 // Utility function to detect persona from text

@@ -10,8 +10,17 @@
       content="An intent-adaptive portfolio that rebuilds its layout based on who is viewing it. Built with React, Tambo AI, and Framer Motion."
     />
     <meta name="theme-color" content="#09090b" />
-    <!-- Signature Font for AV Monogram -->
-    <link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+
+    <!-- Preconnect to Google Fonts for faster loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Signature Font for AV Monogram - Optimized loading -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" as="style">
+    <link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+    </noscript>
   </head>
   <body>
     <div id="root"></div>

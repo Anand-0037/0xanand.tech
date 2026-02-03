@@ -133,7 +133,7 @@ export function AdaptiveHero({ headline, subtext, vibe: _vibe, persona = 'unknow
               whileTap={{ scale: 0.95 }}
               className={cn(
                 'p-3 rounded-lg transition-all duration-300 border',
-                'bg-zinc-900 border-zinc-700 text-zinc-400',
+                'bg-zinc-900 border-zinc-700 text-zinc-300',
                 'hover:border-white hover:text-white hover:bg-zinc-800'
               )}
             >

@@ -68,6 +68,21 @@ export const PORTFOLIO_DATA: {
   },
   projects: [
     {
+      id: "chameleon-portfolio",
+      type: "Generative UI",
+      name: "0xanand.tech (This Site)",
+      description: "An intent-adaptive portfolio that rebuilds its layout based on the visitor's identity (Recruiter, CTO, Founder).",
+      metrics: ["Generative UI", "Polymath Engine", "Tambo SDK"],
+      businessValue: "Increases conversion by showing visitors exactly what they want to see, filtering out irrelevant noise.",
+      technicalDepth: "Uses AI orchestration to detect user intent and map it to React component layouts. Features a custom sorting engine for project relevance.",
+      stack: ["React", "Tambo AI", "Framer Motion", "Vite"],
+      tags: ["frontend", "ai_ml", "fullstack", "general"],
+      links: {
+        github: "https://github.com/Anand-0037/0xanand.tech",
+        demo: "https://0xanand.tech"
+      }
+    },
+    {
       id: "kaggle-ingest",
       type: "System Tool",
       name: "KaggleIngest",
@@ -76,7 +91,7 @@ export const PORTFOLIO_DATA: {
       businessValue: "Solves the 'Context Bottleneck' for data scientists, reducing hallucination rates and API costs.",
       technicalDepth: "Built with FastAPI and React. Implements custom parsing logic to convert heavy Jupyter notebooks into token-optimized text formats.",
       stack: ["FastAPI", "React", "Python", "Vercel"],
-      tags: ["ai_ml", "backend", "fullstack"],
+      tags: ["ai_ml", "backend", "fullstack", "frontend"],
       links: {
         github: "https://github.com/Anand-0037/kaggle-ingest",
         demo: "https://kaggleingest.com"

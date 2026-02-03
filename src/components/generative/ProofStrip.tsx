@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import type { ProofStripProps, Persona } from '@/lib/schemas';
-import { Award, Star, Clock, Users } from 'lucide-react';
+import { Award, Star, Clock, Zap } from 'lucide-react';
 
 interface ProofStripComponentProps extends ProofStripProps {
   persona?: Persona;
@@ -10,8 +10,8 @@ interface ProofStripComponentProps extends ProofStripProps {
 const metricIcons = [
   { icon: <Clock size={18} />, label: 'Years Experience' },
   { icon: <Award size={18} />, label: 'Hackathon Wins' },
-  { icon: <Star size={18} />, label: 'Response Time' },
-  { icon: <Users size={18} />, label: 'Achievement' },
+  { icon: <Star size={18} />, label: 'Job Success' },
+  { icon: <Zap size={18} />, label: 'Primary Focus' },
 ];
 
 export function ProofStrip({ metrics, style, persona = 'unknown' }: ProofStripComponentProps) {

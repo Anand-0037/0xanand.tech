@@ -3,16 +3,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { detectPersona, getPersonaConfig, type Persona } from '@/lib/schemas';
 import { PORTFOLIO_DATA } from '@/lib/portfolio-data';
-import {
-  LayoutShell,
-  AdaptiveHero,
-  SkillGrid,
-  ProjectShowcase,
-  ProofStrip,
-} from '@/components/generative';
-import { ContactAction } from '@/components/interactable';
+import { LayoutShell, AdaptiveHero } from '@/components/generative';
 import { Send, Sparkles, User, Briefcase, Code, Zap } from 'lucide-react';
-import './index.css';
+import { Suspense, lazy } from 'react';
+
+// Lazy load heavy components
+const SkillGrid = lazy(() => import('@/components/generative/SkillGrid').then(module => ({ default: module.SkillGrid })));
+const ProjectShowcase = lazy(() => import('@/components/generative/ProjectShowcase').then(module => ({ default: module.ProjectShowcase })));
+const ProofStrip = lazy(() => import('@/components/generative/ProofStrip').then(module => ({ default: module.ProofStrip })));
+const ContactAction = lazy(() => import('@/components/interactable/ContactAction').then(module => ({ default: module.ContactAction })));
 
 // Persona display info with persona-specific colors
 const personaInfo: Record<Persona, { label: string; icon: React.ReactNode; color: string; bgColor: string }> = {
@@ -231,38 +230,46 @@ function App() {
 
           {/* ProofStrip - For recruiters and founders */}
           {(currentPersona === 'recruiter' || currentPersona === 'founder' || currentPersona === 'unknown') && (
-            <ProofStrip
-              metrics={['4+', '2', '<30s', 'GSoC']}
-              style={currentPersona === 'founder' ? 'prominent' : 'minimal'}
-              persona={currentPersona}
-            />
+            <Suspense fallback={<div className="h-32 animate-pulse bg-zinc-900/50 rounded-2xl" />}>
+              <ProofStrip
+                metrics={['2+', '8+', '100%', 'Web3']}
+                style={currentPersona === 'founder' ? 'prominent' : 'minimal'}
+                persona={currentPersona}
+              />
+            </Suspense>
           )}
 
           {/* Skills */}
-          <SkillGrid
-            skills={allSkills}
-            focus={config.skillFocus}
-            persona={currentPersona}
-          />
+          <Suspense fallback={<div className="h-64 animate-pulse bg-zinc-900/50 rounded-2xl" />}>
+            <SkillGrid
+              skills={allSkills}
+              focus={config.skillFocus}
+              persona={currentPersona}
+            />
+          </Suspense>
 
           {/* Projects */}
-          <ProjectShowcase
-            projectIds={projectIds}
-            emphasis={config.projectEmphasis}
-            domain={config.domain}
-            persona={currentPersona}
-          />
+          <Suspense fallback={<div className="h-96 animate-pulse bg-zinc-900/50 rounded-2xl" />}>
+            <ProjectShowcase
+              projectIds={projectIds}
+              emphasis={config.projectEmphasis}
+              domain={config.domain}
+              persona={currentPersona}
+            />
+          </Suspense>
 
           {/* Contact - Always last */}
-          <ContactAction
-            intent={config.contactIntent}
-            prefilledMessage={
-              currentPersona === 'founder'
-                ? "I'm building something exciting and would love to discuss..."
-                : undefined
-            }
-            persona={currentPersona}
-          />
+          <Suspense fallback={<div className="h-48 animate-pulse bg-zinc-900/50 rounded-2xl" />}>
+            <ContactAction
+              intent={config.contactIntent}
+              prefilledMessage={
+                currentPersona === 'founder'
+                  ? "I'm building something exciting and would love to discuss..."
+                  : undefined
+              }
+              persona={currentPersona}
+            />
+          </Suspense>
         </LayoutShell>
       </main>
     </div>

@@ -52,3 +52,17 @@ body {
 
 /* Utilities */
 .text-subtle { color: #a1a1aa; } /* Zinc 400 */
+
+/* Performance Optimizations - CSS Animations */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+}
+
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }

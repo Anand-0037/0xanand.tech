@@ -72,24 +72,16 @@ export function AdaptiveHero({ headline, subtext, vibe: _vibe, persona = 'unknow
         </motion.div>
 
         {/* Headline - Clean White Typography */}
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15, duration: 0.5 }}
-          className="text-5xl md:text-7xl font-bold tracking-tighter text-white mb-6"
-        >
+        {/* Headline - Clean White Typography - CSS Animation for LCP */}
+        <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-white mb-6 opacity-0 animate-fade-in delay-100">
           {headline || profile.name}
-        </motion.h1>
+        </h1>
 
         {/* Subtext */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.25, duration: 0.5 }}
-          className="text-lg text-zinc-400 mb-8 max-w-2xl leading-relaxed"
-        >
+        {/* Subtext - CSS Animation to prevent layout shift */}
+        <p className="text-lg text-zinc-400 mb-8 max-w-2xl leading-relaxed opacity-0 animate-fade-in delay-200">
           {subtext || profile.tagline}
-        </motion.p>
+        </p>
 
         {/* Meta info */}
         <motion.div

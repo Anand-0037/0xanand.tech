@@ -3,14 +3,14 @@
 export const PORTFOLIO_DATA = {
   profile: {
     name: "Anand Vashishtha",
-    tagline: "Full-Stack Engineer & Data Scientist",
+    tagline: "Full-Stack Engineer Exploring Web3",
     bio: {
-      short: "Dual-degree student (ABES & IIT Madras) bridging Systems Engineering with AI Orchestration.",
-      long: "I am a builder focused on the intersection of Full-Stack Engineering and Data Science. Currently pursuing a dual-degree path (B.Tech CSE + BS Data Science @ IIT Madras). I specialize in breaking the 'Context Bottleneck' in AI applications and building resilient, asynchronous systems.",
+      short: "Full-stack engineer with 2+ years of experience building resilient systems and exploring Web3 technologies.",
+      long: "I am a builder focused on Full-Stack Engineering and Web3 innovation. Currently pursuing a dual-degree path (B.Tech CSE + BS Data Science @ IIT Madras). With 2+ years of hands-on experience, I specialize in breaking the 'Context Bottleneck' in AI applications and building resilient, asynchronous systems.",
     },
     location: "Ghaziabad, India",
     email: "anandcollege07@gmail.com",
-    availability: "Open for Internships & GSoC '26",
+    availability: "Open for Opportunities",
   },
 
   socials: {

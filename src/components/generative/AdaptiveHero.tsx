@@ -3,13 +3,13 @@ import { cn } from '@/lib/utils';
 import type { AdaptiveHeroProps } from '@/lib/schemas';
 import type { Persona } from '@/lib/schemas';
 import { PORTFOLIO_DATA } from '@/lib/portfolio-data';
-import { Github, Linkedin, Mail, MapPin, ExternalLink } from 'lucide-react';
+import { Github, Linkedin, Mail, MapPin, ExternalLink, Twitter } from 'lucide-react';
 
 interface AdaptiveHeroComponentProps extends AdaptiveHeroProps {
   persona?: Persona;
 }
 
-export function AdaptiveHero({ headline, subtext, vibe, persona = 'unknown' }: AdaptiveHeroComponentProps) {
+export function AdaptiveHero({ headline, subtext, vibe: _vibe, persona = 'unknown' }: AdaptiveHeroComponentProps) {
   const { profile, socials } = PORTFOLIO_DATA;
 
   // Persona-specific accent colors
@@ -47,20 +47,8 @@ export function AdaptiveHero({ headline, subtext, vibe, persona = 'unknown' }: A
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
-      className={cn(
-        'relative overflow-hidden rounded-3xl p-8 md:p-16 border transition-all duration-500',
-        vibe === 'corporate' && 'glass-card border-slate-700/50',
-        vibe === 'startup' && cn(
-          'glass-card border-rose-500/20',
-          'bg-gradient-to-br from-rose-950/30 via-orange-950/20 to-slate-950/30'
-        )
-      )}
+      className="neo-card rounded-lg p-8 md:p-16"
     >
-      {/* Decorative gradient orb */}
-      <div className={cn(
-        "absolute -top-24 -right-24 w-48 h-48 rounded-full blur-3xl opacity-30 transition-colors duration-1000",
-        `bg-gradient-to-br ${colors.primary}`
-      )} />
 
       <div className="relative z-10">
         {/* Status Badge */}
@@ -83,16 +71,12 @@ export function AdaptiveHero({ headline, subtext, vibe, persona = 'unknown' }: A
           {profile.availability}
         </motion.div>
 
-        {/* Headline */}
+        {/* Headline - Clean White Typography */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15, duration: 0.5 }}
-          className={cn(
-            'font-bold leading-tight mb-4 tracking-tight',
-            vibe === 'corporate' && 'text-4xl md:text-6xl text-white',
-            vibe === 'startup' && cn('text-5xl md:text-7xl', colors.text)
-          )}
+          className="text-5xl md:text-7xl font-bold tracking-tighter text-white mb-6"
         >
           {headline || profile.name}
         </motion.h1>
@@ -102,11 +86,7 @@ export function AdaptiveHero({ headline, subtext, vibe, persona = 'unknown' }: A
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25, duration: 0.5 }}
-          className={cn(
-            'mb-8 max-w-2xl leading-relaxed',
-            vibe === 'corporate' && 'text-lg text-slate-300',
-            vibe === 'startup' && 'text-xl md:text-2xl text-slate-200 font-light'
-          )}
+          className="text-lg text-zinc-400 mb-8 max-w-2xl leading-relaxed"
         >
           {subtext || profile.tagline}
         </motion.p>
@@ -139,6 +119,7 @@ export function AdaptiveHero({ headline, subtext, vibe, persona = 'unknown' }: A
           {[
             { href: socials.github, icon: <Github size={20} />, label: 'GitHub', id: 'github' },
             { href: socials.linkedin, icon: <Linkedin size={20} />, label: 'LinkedIn', id: 'linkedin' },
+            { href: socials.twitter, icon: <Twitter size={20} />, label: 'X', id: 'twitter' },
             { href: `mailto:${profile.email}`, icon: <Mail size={20} />, label: 'Email', id: 'email' },
             { href: socials.website, icon: <ExternalLink size={20} />, label: 'Website', id: 'website' },
           ].map((social) => (
@@ -151,9 +132,9 @@ export function AdaptiveHero({ headline, subtext, vibe, persona = 'unknown' }: A
               whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.95 }}
               className={cn(
-                'p-3 rounded-xl transition-all duration-300 border',
-                'bg-slate-800/50 border-slate-700/50 text-slate-400',
-                'hover:border-slate-600 hover:text-white hover:bg-slate-700/50'
+                'p-3 rounded-lg transition-all duration-300 border',
+                'bg-zinc-900 border-zinc-700 text-zinc-400',
+                'hover:border-white hover:text-white hover:bg-zinc-800'
               )}
             >
               {social.icon}

@@ -13,10 +13,20 @@ interface ProjectShowcaseComponentProps extends ProjectShowcaseProps {
   persona?: Persona;
 }
 
-export function ProjectShowcase({ projectIds, emphasis, persona = 'unknown' }: ProjectShowcaseComponentProps) {
-  const projects = projectIds.length > 0
+export function ProjectShowcase({ projectIds, emphasis, domain, persona = 'unknown' }: ProjectShowcaseComponentProps) {
+  // 1. Get projects (either filtered by ID or all if IDs are empty/generic)
+  let displayProjects = projectIds.length > 0
     ? PORTFOLIO_DATA.projects.filter(p => projectIds.includes(p.id))
     : PORTFOLIO_DATA.projects;
+
+  // 2. INTELLIGENT SORTING: If a specific domain is detected, bubble those projects to the top
+  if (domain && domain !== 'general') {
+    displayProjects = [...displayProjects].sort((a, b) => {
+      const aMatch = a.tags?.includes(domain) ? 2 : 0;
+      const bMatch = b.tags?.includes(domain) ? 2 : 0;
+      return bMatch - aMatch;
+    });
+  }
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -35,21 +45,29 @@ export function ProjectShowcase({ projectIds, emphasis, persona = 'unknown' }: P
       animate="visible"
       className="space-y-6"
     >
-      <h2 className="text-2xl font-bold text-white">
-        {emphasis === 'outcomes' ? 'Projects & Impact' : 'Technical Portfolio'}
-      </h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold text-white">
+          {emphasis === 'outcomes' ? 'Projects & Impact' : 'Technical Portfolio'}
+        </h2>
+        {domain && domain !== 'general' && (
+          <span className="text-xs font-mono px-2 py-1 rounded border border-white/10 text-white/50">
+            Filter: {domain.replace('_', '/')}
+          </span>
+        )}
+      </div>
 
       <div className={cn(
         'grid gap-6',
         emphasis === 'outcomes' ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'
       )}>
-        {projects.map((project) => (
+        {displayProjects.map((project) => (
           <ProjectCard
             key={project.id}
             project={project}
             emphasis={emphasis}
             variants={cardVariants}
             persona={persona}
+            highlight={project.tags?.includes(domain)}
           />
         ))}
       </div>
@@ -62,11 +80,12 @@ interface ProjectCardProps {
   emphasis: 'outcomes' | 'architecture';
   variants: typeof cardVariants;
   persona: Persona;
+  highlight?: boolean; // NEW: For domain-matched projects
 }
 
 
 
-function ProjectCard({ project, emphasis, variants, persona }: ProjectCardProps) {
+function ProjectCard({ project, emphasis, variants, persona, highlight = false }: ProjectCardProps) {
   // Persona-specific colors
   const colors = {
     recruiter: {
@@ -102,14 +121,15 @@ function ProjectCard({ project, emphasis, variants, persona }: ProjectCardProps)
       variants={variants}
       whileHover={{ y: -4 }}
       className={cn(
-        'group relative overflow-hidden rounded-2xl transition-all duration-300 border',
-        'glass-card',
-        color.border,
-        emphasis === 'outcomes' ? 'p-6' : 'p-8'
+        'group relative overflow-hidden rounded-lg transition-all duration-300',
+        'neo-card', // Neo-Brutalist card
+        emphasis === 'outcomes' ? 'p-6' : 'p-8',
+        // Highlight domain-matched projects with subtle ring glow
+        highlight && 'ring-1 ring-white/20 shadow-lg shadow-white/5'
       )}
     >
-      {/* Hover gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+      {/* Subtle hover effect */}
+      <div className="absolute inset-0 bg-white/[0.01] opacity-0 group-hover:opacity-100 transition-opacity" />
 
       {/* Header */}
       <div className="relative flex items-start justify-between mb-4">

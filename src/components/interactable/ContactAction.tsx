@@ -71,7 +71,7 @@ export function ContactAction({ intent, prefilledMessage, persona = 'unknown' }:
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className={cn('glass-card rounded-2xl p-8 md:p-10 border', color.border)}
+      className="neo-card rounded-lg p-8 md:p-10"
     >
       <h2 className="text-2xl font-bold text-white mb-2">Get in Touch</h2>
       <p className="text-slate-400 mb-8">

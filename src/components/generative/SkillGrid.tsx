@@ -29,31 +29,31 @@ const categoryLabels: Record<string, string> = {
 export function SkillGrid({ skills: _skills, focus, persona = 'unknown' }: SkillGridComponentProps) {
   const skillsData = PORTFOLIO_DATA.skills;
 
-  // Persona-specific colors
+  // Neo-Brutalist monochrome colors (minimal persona variation)
   const colors = {
     recruiter: {
-      tag: 'bg-blue-500/15 text-blue-300 border-blue-500/25 hover:bg-blue-500/25',
-      icon: 'bg-blue-500/20 text-blue-400',
-      bar: 'from-blue-500 to-purple-500',
-      card: 'hover:border-blue-500/30',
+      tag: 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:bg-white hover:text-black hover:border-white',
+      icon: 'bg-zinc-800 text-zinc-400',
+      bar: 'bg-zinc-100',
+      card: 'neo-card',
     },
     founder: {
-      tag: 'bg-rose-500/15 text-rose-300 border-rose-500/25 hover:bg-rose-500/25',
-      icon: 'bg-rose-500/20 text-rose-400',
-      bar: 'from-rose-500 to-orange-500',
-      card: 'hover:border-rose-500/30',
+      tag: 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:bg-white hover:text-black hover:border-white',
+      icon: 'bg-zinc-800 text-zinc-400',
+      bar: 'bg-zinc-100',
+      card: 'neo-card',
     },
     cto: {
-      tag: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/25 hover:bg-emerald-500/25',
-      icon: 'bg-emerald-500/20 text-emerald-400',
-      bar: 'from-emerald-500 to-cyan-500',
-      card: 'hover:border-emerald-500/30',
+      tag: 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:bg-white hover:text-black hover:border-white',
+      icon: 'bg-zinc-800 text-zinc-400',
+      bar: 'bg-zinc-100',
+      card: 'neo-card',
     },
     unknown: {
-      tag: 'bg-indigo-500/15 text-indigo-300 border-indigo-500/25 hover:bg-indigo-500/25',
-      icon: 'bg-indigo-500/20 text-indigo-400',
-      bar: 'from-indigo-500 to-purple-500',
-      card: 'hover:border-indigo-500/30',
+      tag: 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:bg-white hover:text-black hover:border-white',
+      icon: 'bg-zinc-800 text-zinc-400',
+      bar: 'bg-zinc-100',
+      card: 'neo-card',
     },
   };
 
@@ -79,7 +79,7 @@ export function SkillGrid({ skills: _skills, focus, persona = 'unknown' }: Skill
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="glass-card rounded-2xl p-6 md:p-8"
+        className="neo-card rounded-lg p-6 md:p-8"
       >
         <h2 className="text-xl font-semibold text-white mb-6">Technical Skills</h2>
         <div className="flex flex-wrap gap-2">
@@ -90,7 +90,7 @@ export function SkillGrid({ skills: _skills, focus, persona = 'unknown' }: Skill
                 variants={itemVariants}
                 whileHover={{ scale: 1.05, y: -2 }}
                 className={cn(
-                  'px-4 py-2 rounded-full text-sm font-medium border transition-all cursor-default',
+                  'px-3 py-1 text-sm font-mono border transition-all cursor-default',
                   color.tag
                 )}
               >
@@ -119,7 +119,7 @@ export function SkillGrid({ skills: _skills, focus, persona = 'unknown' }: Skill
             variants={itemVariants}
             whileHover={{ y: -4 }}
             className={cn(
-              'glass-card rounded-2xl p-6 transition-all duration-300 border',
+              'rounded-lg p-6 transition-all duration-300',
               color.card
             )}
           >
@@ -145,7 +145,7 @@ export function SkillGrid({ skills: _skills, focus, persona = 'unknown' }: Skill
                       initial={{ width: 0 }}
                       animate={{ width: `${75 + (index * 5) % 25}%` }}
                       transition={{ duration: 0.8, delay: index * 0.05 }}
-                      className={cn('h-full rounded-full bg-gradient-to-r', color.bar)}
+                      className={cn('h-full rounded-full', color.bar)}
                     />
                   </div>
                 </div>

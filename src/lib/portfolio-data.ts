@@ -50,74 +50,98 @@ export const PORTFOLIO_DATA = {
     },
   ],
 
-  // The Heart of Chameleon: Projects with Persona-Specific Data
+  // The Heart of Chameleon: Projects with Persona-Specific Data (DOMAIN-TAGGED)
   projects: [
     {
       id: "kaggle-ingest",
       name: "KaggleIngest",
       type: "Product",
+      tags: ["ai_ml", "backend", "mlops", "fullstack"], // DOMAIN TAGS
       links: {
         demo: "https://kaggleingest.com",
         github: "https://github.com/Anand-0037/KaggleIngest",
       },
       // Recruiter View (Standard)
-      description: "A Full-Stack developer tool that transforms Kaggle datasets into LLM-ready context.",
-      stack: ["Next.js", "FastAPI", "MongoDB", "Kaggle API"],
+      description: "AI-powered platform that transforms Kaggle competition data into token-optimized context for LLMs.",
+      stack: ["Next.js", "FastAPI", "MongoDB", "TOON Format", "Kaggle API"],
 
       // Founder View (Metrics & ROI)
       metrics: [
-        "40% Token Cost Reduction",
-        "Processes Context in <30s",
-        "Solves LLM Context Bottleneck",
+        "40% Token Reduction",
+        "Live SaaS Product",
+        "Solves Context Window Limits",
       ],
-      businessValue: "Eliminates the friction of manual copy-pasting for Data Scientists, increasing AI coding efficiency.",
+      businessValue: "Eliminates manual data prep for data scientists, enabling faster iterations and higher Kaggle rankings.",
 
       // CTO View (Architecture & Complexity)
-      technicalDepth: "Implemented a TOON format extraction pipeline. Uses an asynchronous FastAPI backend to handle massive schema ingestion without blocking. Solved rate-limiting issues via intelligent queuing.",
+      technicalDepth: "Implemented a custom ingestion pipeline using the TOON format. Built an async FastAPI backend to handle large dataset schemas without blocking. Features private Kaggle API integration and intelligent rate-limiting.",
+    },
+    {
+      id: "agi-with-ai",
+      name: "AGIwithAI",
+      type: "Venture",
+      tags: ["ai_ml", "research", "future"], // DOMAIN TAGS
+      links: {
+        demo: "https://agiwithai.com",
+      },
+      description: "An upcoming research lab and content platform exploring the frontiers of Artificial General Intelligence.",
+      stack: ["Research", "Community", "AI Theory", "Memory Systems"],
+
+      metrics: [
+        "Concept Phase",
+        "Building Brains",
+        "Human-AI Synergy",
+      ],
+      businessValue: "Positioning to be a thought leader in the post-LLM era, focusing on AI memory and agency.",
+
+      technicalDepth: "Currently in R&D phase exploring architectures for long-term AI memory (Mem0, Supermemory) and autonomous agentic workflows. Focus on breaking the stateless bottleneck of current LLMs.",
     },
     {
       id: "dub-wizard",
       name: "DubWizard",
       type: "AI Pipeline",
+      tags: ["ai_ml", "backend", "media"], // DOMAIN TAGS
       links: {
         github: "https://github.com/Anand-0037/DubWizard",
       },
-      description: "Automated video dubbing pipeline utilizing multi-modal AI models.",
+      description: "Automated video dubbing pipeline utilizing multi-modal AI models (Whisper, GPT-4, ElevenLabs).",
       stack: ["React", "FastAPI", "OpenAI Whisper", "ElevenLabs"],
 
       metrics: [
         "Multi-modal Orchestration",
-        "Preserves Emotional Tone",
-        "Scalable S3 Storage",
+        "Preserves Tone",
+        "Scalable Architecture",
       ],
-      businessValue: "Breaks language barriers for content creators by automating professional-grade dubbing.",
+      businessValue: "Breaks language barriers for content creators by automating professional-grade dubbing at scale.",
 
-      technicalDepth: "Orchestrated a pipeline of 'Ear' (Whisper), 'Translator' (GPT-4), and 'Voice' (ElevenLabs). Managed complexity using a Kiro monorepo structure to separate frontend/backend concerns.",
+      technicalDepth: "Orchestrated a complex DAG of AI models: Speech-to-Text (Whisper) -> Translation (GPT-4) -> Text-to-Speech (ElevenLabs). Managed via a monorepo structure with isolated frontend/backend concerns.",
     },
     {
       id: "json-parser",
       name: "JSON Parser CLI",
       type: "System Tool",
+      tags: ["backend", "core", "devops"], // DOMAIN TAGS
       links: {
         github: "https://github.com/Anand-0037/json-parser",
         pypi: "https://pypi.org/project/json-parser-cli/",
       },
-      description: "A CLI tool for lexical and syntactic analysis of JSON files.",
+      description: "A CLI tool for lexical and syntactic analysis of JSON files, built from scratch.",
       stack: ["Python", "CLI", "Compiler Theory"],
 
       metrics: [
-        "Published on PyPI",
-        "Zero Runtime Dependencies",
-        "Recursive Descent Parsing",
+        "Zero Dependencies",
+        "Recursive Descent",
+        "PyPI Published",
       ],
-      businessValue: "Demonstrates deep understanding of low-level parsing logic beyond using standard libraries.",
+      businessValue: "Demonstrates fundamental computer science understanding beyond high-level framework usage.",
 
-      technicalDepth: "Implemented a custom Lexer and Parser from scratch. Handles tokenization of primitive types and validates nesting using recursive descent logic. Supports non-standard JSON comments.",
+      technicalDepth: "Implemented a custom Lexer and Parser. Handles tokenization and validation of nested structures using recursive descent algorithms. Supports non-standard JSON features like comments.",
     },
     {
       id: "reminder-system",
       name: "Async Reminder System",
       type: "Backend Service",
+      tags: ["backend", "devops"], // DOMAIN TAGS
       links: {
         github: "https://github.com/Anand-0037/remainder-system",
       },

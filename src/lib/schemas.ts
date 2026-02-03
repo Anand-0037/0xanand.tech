@@ -1,12 +1,15 @@
 import { z } from 'zod';
 
-// LayoutShell Schema - Controls the overall page grid
+// LayoutShell Schema - Controls the overall page grid (DOMAIN-AWARE)
 export const LayoutShellSchema = z.object({
   mode: z.enum(['resume', 'pitch', 'technical']).describe(
     'The overall layout structure. "resume": vertical stack for recruiters. "pitch": masonry grid for founders/investors. "technical": two-column documentation style for CTOs.'
   ),
   emphasis: z.enum(['speed', 'depth']).describe(
     'Content density. "speed": scannable, high-level highlights (Recruiters/Founders). "depth": detailed technical deep-dives (CTOs).'
+  ),
+  domain: z.enum(['general', 'frontend', 'backend', 'ai_ml', 'mlops', 'devops']).describe(
+    'The specific technical domain relevant to the user query. "frontend" for React/UI roles, "backend" for API/database roles, "ai_ml" for ML/AI roles, "mlops" for pipeline/deployment roles, "devops" for infrastructure roles. Default to "general" if unclear.'
   ),
 });
 export type LayoutShellProps = z.infer<typeof LayoutShellSchema>;
@@ -36,13 +39,16 @@ export const SkillGridSchema = z.object({
 });
 export type SkillGridProps = z.infer<typeof SkillGridSchema>;
 
-// ProjectShowcase Schema - Project cards
+// ProjectShowcase Schema - Project cards (DOMAIN-AWARE)
 export const ProjectShowcaseSchema = z.object({
   projectIds: z.array(z.string()).describe(
-    'IDs of projects to render (e.g., "kaggle-ingest", "json-parser"). Select projects relevant to the persona (e.g., detailed backend systems for CTOs, product MVPs for Founders).'
+    'IDs of projects to render (e.g., "kaggle-ingest", "json-parser"). Select ALL relevant project IDs, the component will handle intelligent sorting based on domain.'
   ),
   emphasis: z.enum(['outcomes', 'architecture']).describe(
     'Content focus within cards. "outcomes": Business value, ROI, user metrics (Founders). "architecture": Tech stack, patterns, optimization (CTOs).'
+  ),
+  domain: z.enum(['general', 'frontend', 'backend', 'ai_ml', 'mlops', 'devops']).describe(
+    'Pass the detected domain here to enable intelligent sorting and highlighting. Projects matching this domain will be prioritized.'
   ),
 });
 export type ProjectShowcaseProps = z.infer<typeof ProjectShowcaseSchema>;
@@ -114,6 +120,7 @@ export function getPersonaConfig(persona: Persona) {
         skillFocus: 'breadth' as const,
         projectEmphasis: 'outcomes' as const,
         contactIntent: 'hiring' as const,
+        domain: 'general' as const,
       };
     case 'founder':
       return {
@@ -123,6 +130,7 @@ export function getPersonaConfig(persona: Persona) {
         skillFocus: 'breadth' as const,
         projectEmphasis: 'outcomes' as const,
         contactIntent: 'freelance' as const,
+        domain: 'general' as const,
       };
     case 'cto':
       return {
@@ -132,6 +140,7 @@ export function getPersonaConfig(persona: Persona) {
         skillFocus: 'depth' as const,
         projectEmphasis: 'architecture' as const,
         contactIntent: 'hiring' as const,
+        domain: 'general' as const,
       };
     default:
       return {
@@ -141,6 +150,7 @@ export function getPersonaConfig(persona: Persona) {
         skillFocus: 'breadth' as const,
         projectEmphasis: 'outcomes' as const,
         contactIntent: 'hiring' as const,
+        domain: 'general' as const,
       };
   }
 }

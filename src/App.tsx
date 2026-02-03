@@ -42,12 +42,12 @@ const personaInfo: Record<Persona, { label: string; icon: React.ReactNode; color
   },
 };
 
-// Dynamic background styles per persona
+// Solid background - no gradients in Neo-Brutalist design
 const bgStyles: Record<Persona, string> = {
-  recruiter: 'from-slate-950 via-[#0f172a] to-slate-950',
-  founder: 'from-[#1a0505] via-[#1c0810] to-slate-950',
-  cto: 'from-[#020d05] via-[#021008] to-slate-950',
-  unknown: 'from-slate-950 via-slate-900 to-slate-950',
+  recruiter: 'bg-zinc-950',
+  founder: 'bg-zinc-950',
+  cto: 'bg-zinc-950',
+  unknown: 'bg-zinc-950',
 };
 
 function App() {
@@ -86,69 +86,23 @@ function App() {
 
   return (
     <div className={cn(
-      "min-h-screen transition-colors duration-[1500ms] ease-in-out bg-gradient-to-b relative",
+      "min-h-screen transition-colors duration-300 ease-in-out relative",
       bgStyles[currentPersona]
     )}>
-      {/* Noise Texture Overlay */}
-      <div className="bg-noise" />
-
-      {/* Floating Ambient Orbs */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          className={cn(
-            "absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full blur-[120px] transition-colors duration-1000 animate-pulse-glow",
-            currentPersona === 'recruiter' && "bg-blue-600",
-            currentPersona === 'founder' && "bg-rose-600",
-            currentPersona === 'cto' && "bg-emerald-600",
-            currentPersona === 'unknown' && "bg-indigo-900"
-          )}
-          animate={{
-            scale: [1, 1.1, 1],
-            opacity: [0.15, 0.25, 0.15]
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        <motion.div
-          className={cn(
-            "absolute bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] rounded-full blur-[120px] transition-colors duration-1000",
-            currentPersona === 'recruiter' && "bg-purple-600",
-            currentPersona === 'founder' && "bg-orange-600",
-            currentPersona === 'cto' && "bg-cyan-600",
-            currentPersona === 'unknown' && "bg-slate-800"
-          )}
-          animate={{
-            scale: [1.1, 1, 1.1],
-            opacity: [0.1, 0.2, 0.1]
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-      </div>
+      {/* Engineering Grid Background */}
+      <div className="bg-grid" />
 
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/5">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-zinc-950/80 backdrop-blur-sm border-b border-zinc-800">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <motion.div
-              className={cn(
-                "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500",
-                currentPersona === 'recruiter' && "bg-gradient-to-br from-blue-500 to-purple-600",
-                currentPersona === 'founder' && "bg-gradient-to-br from-rose-500 to-orange-500",
-                currentPersona === 'cto' && "bg-gradient-to-br from-emerald-500 to-cyan-500",
-                currentPersona === 'unknown' && "bg-gradient-to-br from-slate-600 to-slate-700"
-              )}
-              whileHover={{ scale: 1.05 }}
-            >
-              <Sparkles size={20} className="text-white" />
-            </motion.div>
-            <span className="font-bold text-lg text-white tracking-tight">Chameleon</span>
+            {/* The AV Monogram / Signature */}
+            <span className="text-4xl text-white font-['Mrs_Saint_Delafield'] leading-none pt-2">
+              AV
+            </span>
+            <span className="font-mono text-sm tracking-widest uppercase text-zinc-400">
+              Anand Vashishtha
+            </span>
           </div>
 
           {/* Persona indicator */}
@@ -176,15 +130,13 @@ function App() {
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
           <motion.div
             className={cn(
-              'relative glass rounded-2xl overflow-hidden transition-all duration-300',
-              isProcessing && 'ring-2',
-              isProcessing && currentPersona === 'recruiter' && 'ring-blue-500/50',
-              isProcessing && currentPersona === 'founder' && 'ring-rose-500/50',
-              isProcessing && currentPersona === 'cto' && 'ring-emerald-500/50',
-              isProcessing && currentPersona === 'unknown' && 'ring-indigo-500/50',
-              currentPersona === 'recruiter' && 'glow-recruiter',
-              currentPersona === 'founder' && 'glow-founder',
-              currentPersona === 'cto' && 'glow-cto'
+              'relative rounded-lg overflow-hidden transition-all duration-300',
+              'bg-zinc-900 border',
+              !isProcessing && 'border-zinc-700 focus-within:border-white',
+              isProcessing && currentPersona === 'recruiter' && 'border-blue-500',
+              isProcessing && currentPersona === 'founder' && 'border-rose-500',
+              isProcessing && currentPersona === 'cto' && 'border-emerald-500',
+              isProcessing && currentPersona === 'unknown' && 'border-zinc-500'
             )}
             layout
           >
@@ -266,7 +218,7 @@ function App() {
 
       {/* Main Content Area */}
       <main className="relative z-10 pt-24 pb-44">
-        <LayoutShell mode={config.layoutMode} emphasis={config.emphasis}>
+        <LayoutShell mode={config.layoutMode} emphasis={config.emphasis} domain={config.domain}>
           {/* Hero - Always first */}
           <AdaptiveHero
             headline={profile.name}
@@ -297,6 +249,7 @@ function App() {
           <ProjectShowcase
             projectIds={projectIds}
             emphasis={config.projectEmphasis}
+            domain={config.domain}
             persona={currentPersona}
           />
 

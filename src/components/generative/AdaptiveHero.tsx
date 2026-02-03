@@ -124,7 +124,7 @@ export function AdaptiveHero({ headline, subtext, vibe: _vibe, persona = 'unknow
               whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.95 }}
               className={cn(
-                'p-3 rounded-lg transition-all duration-300 border',
+                'p-3 min-w-[48px] min-h-[48px] flex items-center justify-center rounded-lg transition-all duration-300 border',
                 'bg-zinc-900 border-zinc-700 text-zinc-300',
                 'hover:border-white hover:text-white hover:bg-zinc-800'
               )}

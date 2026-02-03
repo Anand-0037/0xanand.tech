@@ -144,6 +144,7 @@ function App() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Who are you? (e.g., 'I'm hiring a developer', 'Building an MVP', 'Evaluating your architecture')"
+              aria-label="Describe your intent or role"
               className={cn(
                 'w-full px-6 py-4 pr-14 bg-transparent text-white',
                 'placeholder-slate-500 focus:outline-none text-base'

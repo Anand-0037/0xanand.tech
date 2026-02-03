@@ -148,9 +148,10 @@ function ProjectCard({ project, emphasis, variants, persona, highlight = false }
               href={project.links.github}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={`View ${project.name} source code on GitHub`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
-              className="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white transition-all border border-slate-700/50"
+              className="p-3 min-w-[48px] min-h-[48px] flex items-center justify-center rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white transition-all border border-slate-700/50"
             >
               <Github size={18} />
             </motion.a>
@@ -160,10 +161,11 @@ function ProjectCard({ project, emphasis, variants, persona, highlight = false }
               href={project.links.demo}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={`View ${project.name} live demo`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               className={cn(
-                "p-2.5 rounded-xl transition-all border",
+                "p-3 min-w-[48px] min-h-[48px] flex items-center justify-center rounded-xl transition-all border",
                 persona === 'recruiter' && "bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border-blue-500/30",
                 persona === 'founder' && "bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 border-rose-500/30",
                 persona === 'cto' && "bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border-emerald-500/30",

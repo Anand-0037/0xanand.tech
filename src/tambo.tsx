@@ -81,10 +81,12 @@ export function ChameleonProvider({ children, tools = [], apiKey, projectId }: C
   const finalApiKey = apiKey ?? envApiKey;
   const finalProjectId = projectId ?? envProjectId;
 
-  // Validate environment variables are present in development
-  if (import.meta.env.DEV) {
-    if (!finalApiKey) console.warn("Chameleon: VITE_TAMBO_API_KEY is missing from .env");
-    if (!finalProjectId) console.warn("Chameleon: VITE_TAMBO_PROJECT_ID is missing from .env");
+  // LOUD warning if API keys are missing - this is the #1 cause of infinite loading
+  if (!finalApiKey) {
+    console.error('\n🚨 CRITICAL: VITE_TAMBO_API_KEY is MISSING!\n\nCreate a .env file in /chameleon with:\nVITE_TAMBO_API_KEY=your_api_key_here\nVITE_TAMBO_PROJECT_ID=your_project_id\n\nThen restart the dev server.\n');
+  }
+  if (!finalProjectId) {
+    console.error('\n🚨 CRITICAL: VITE_TAMBO_PROJECT_ID is MISSING!\n\nAdd it to your .env file.\n');
   }
 
   return (

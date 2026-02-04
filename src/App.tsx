@@ -77,12 +77,20 @@ function PortfolioContentWithState({
   const inputRef = React.useRef<HTMLInputElement>(null);
   const { profile, skills, projects } = PORTFOLIO_DATA;
 
-  // Hook into Tambo thread
-  const { sendThreadMessage, streaming } = useTamboThread();
+  // Hook into Tambo thread - only use sendThreadMessage, not streaming (streaming can get stuck)
+  const { sendThreadMessage } = useTamboThread();
 
   const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!input.trim() || isProcessing) return;
+
+    // DEBUG: Check if keys exist (Check console)
+    if (!import.meta.env.VITE_TAMBO_API_KEY) {
+      console.error('CRITICAL: Missing VITE_TAMBO_API_KEY in .env file');
+      setAiReasoning('Error: API Key missing. Check console.');
+      return;
+    }
+    console.log('Chameleon: API Key present, Project ID:', import.meta.env.VITE_TAMBO_PROJECT_ID ? '***configured***' : 'MISSING');
 
     const currentInput = input;
     setIsProcessing(true);
@@ -97,11 +105,21 @@ function PortfolioContentWithState({
     setCurrentPersona(heuristicPersona);
 
     try {
-      await sendThreadMessage(currentInput);
+      // RACE CONDITION: Fail if AI takes longer than 10s
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Request timed out after 10s')), 10000)
+      );
+
+      // Race the actual API call against the timer
+      await Promise.race([
+        sendThreadMessage(currentInput),
+        timeoutPromise
+      ]);
     } catch (error) {
       console.error('Chameleon: Manual input failed:', error);
-      setAiReasoning(`Fallback: Detected ${heuristicPersona} mode`);
+      setAiReasoning(`Fallback: Detected ${heuristicPersona} mode (${error instanceof Error ? error.message : 'Network Error'})`);
     } finally {
+      // This ensures the spinner ALWAYS stops
       setIsProcessing(false);
     }
   }, [input, isProcessing, sendThreadMessage, setCurrentPersona, setAiReasoning]);
@@ -117,10 +135,19 @@ function PortfolioContentWithState({
 
     try {
       console.log('Chameleon: Quick prompt:', prompt);
-      await sendThreadMessage(prompt);
+      
+      // RACE CONDITION: Fail if AI takes longer than 10s
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Request timed out after 10s')), 10000)
+      );
+
+      await Promise.race([
+        sendThreadMessage(prompt),
+        timeoutPromise
+      ]);
     } catch (error) {
       console.error('Chameleon: Quick prompt failed:', error);
-      setAiReasoning(`Fallback: Detected ${persona} mode`);
+      setAiReasoning(`Fallback: Detected ${persona} mode (${error instanceof Error ? error.message : 'Network Error'})`);
     } finally {
       setIsProcessing(false);
       setInput(''); // CRITICAL: Clear input after quick prompt
@@ -247,14 +274,14 @@ function PortfolioContentWithState({
             />
             <motion.button
               type="submit"
-              disabled={isProcessing || streaming}
+              disabled={isProcessing}
               aria-label="Send Intent"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className={cn(
                 'absolute right-3 top-1/2 -translate-y-1/2',
                 'p-3 rounded-xl transition-all font-medium',
-                isProcessing || streaming
+                isProcessing
                   ? 'bg-white/10 text-white/50'
                   : currentPersona === 'recruiter' ? 'btn-recruiter text-white'
                   : currentPersona === 'founder' ? 'btn-founder text-white'
@@ -263,7 +290,7 @@ function PortfolioContentWithState({
                   : 'bg-indigo-500 hover:bg-indigo-600 text-white'
               )}
             >
-              {isProcessing || streaming ? (
+              {isProcessing ? (
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}

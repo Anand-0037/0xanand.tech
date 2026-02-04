@@ -20,18 +20,18 @@ export function ContactAction({ intent, prefilledMessage, persona = 'unknown' }:
     e.preventDefault();
     setIsSending(true);
 
-    // Simulate send delay
-    setTimeout(() => {
-      const subject = selectedIntent === 'hire'
-        ? 'Job Opportunity Discussion'
-        : selectedIntent === 'audit'
-        ? 'Technical Audit Request'
-        : 'Partnership Inquiry';
+    // NO TRICKS: Immediate execution
+    const subject = selectedIntent === 'hire'
+      ? 'Job Opportunity Discussion'
+      : selectedIntent === 'audit'
+      ? 'Technical Audit Request'
+      : 'Partnership Inquiry';
 
-      const mailtoLink = `mailto:${profile.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
-      window.location.href = mailtoLink;
-      setIsSending(false);
-    }, 500);
+    const mailtoLink = `mailto:${profile.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
+    
+    // Open immediately
+    window.location.href = mailtoLink;
+    setIsSending(false);
   };
 
   // Persona-specific colors

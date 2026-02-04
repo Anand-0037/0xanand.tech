@@ -1,4 +1,5 @@
 // src/lib/portfolio-data.ts
+
 export interface Project {
   id: string;
   name: string;
@@ -11,10 +12,31 @@ export interface Project {
   businessValue?: string;
   technicalDepth?: string;
   tags?: string[];
-  comingSoon?: boolean;
+  comingSoon?: boolean; // <--- The optional property causing the issue
 }
 
-export const PORTFOLIO_DATA = {
+// NEW: Define the shape of the main data object
+export interface PortfolioData {
+  profile: {
+    name: string;
+    tagline: string;
+    bio: { short: string; long: string };
+    location: string;
+    email: string;
+    availability: string;
+  };
+  socials: {
+    github: string;
+    linkedin: string;
+    twitter: string;
+    website: string;
+  };
+  skills: Record<string, string[]>;
+  projects: Project[]; // <--- Explicitly typing this array solves the error
+}
+
+// NEW: Apply the type annotation here
+export const PORTFOLIO_DATA: PortfolioData = {
   profile: {
     name: "Anand Vashishtha",
     tagline: "Engineering Intelligence.",
@@ -41,6 +63,19 @@ export const PORTFOLIO_DATA = {
     core: ["DSA", "OOP", "Compiler Design", "Generative UI"]
   },
   projects: [
+    {
+      id: "agi-with-ai",
+      name: "AGIwithAI",
+      type: "AI Exploration Hub",
+      description: "A specialized portal and landing page for AGI research, open-source AI labs, and resource libraries.",
+      stack: ["Next.js 14", "TypeScript", "Tailwind CSS", "Framer Motion"],
+      tech: ["AI/ML"],
+      links: { demo: "https://agiwithai.com" },
+      metrics: ["AGI Research Hub", "Interactive UI", "Resource Library"],
+      businessValue: "Provides a centralized platform for the AGI community to explore labs and research resources.",
+      technicalDepth: "Built with Next.js App Router for high performance and Framer Motion for premium, smooth transitions.",
+      tags: ["ai_ml", "frontend", "ux", "ai"]
+    },
     {
       id: "kaggle-ingest",
       name: "KaggleIngest",
@@ -92,6 +127,19 @@ export const PORTFOLIO_DATA = {
       businessValue: "High-precision model suitable for traffic analysis and autonomous monitoring systems.",
       technicalDepth: "Optimized hyperparameters for nano-model architecture to balance speed vs accuracy.",
       tags: ["ai_ml", "data_science", "cv", "ai"]
+    },
+    {
+      id: "remainder-sys",
+      name: "Distributed Reminder Service",
+      type: "Backend Service",
+      description: "Async notification service capable of scheduling cross-timezone alerts via SMS and WhatsApp.",
+      stack: ["Python", "Twilio API", "SQLite", "AsyncIO"],
+      tech: ["Backend"],
+      links: { github: "https://github.com/Anand-0037/remainder-system" },
+      metrics: ["Timezone Aware", "Twilio Integration", "Pytest Coverage"],
+      businessValue: "Core infrastructure component for user retention and engagement systems.",
+      technicalDepth: "Handled scheduling concurrency and third-party API rate limiting.",
+      tags: ["backend", "devops"]
     },
     {
       id: "chameleon",

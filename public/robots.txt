@@ -1,2 +1,12 @@
 User-agent: *
 Allow: /
+
+# Sitemap for search engines
+Sitemap: https://0xanand.tech/sitemap.xml
+
+# AI Agent Context Files
+# llms.txt is at /llms.txt (standard discovery path)
+# llms-full.txt is at /llms-full.txt (extended context)
+
+# Private paths (if any)
+Disallow: /private/

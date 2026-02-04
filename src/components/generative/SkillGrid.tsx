@@ -49,6 +49,12 @@ export function SkillGrid({ skills: _skills, focus, persona = 'unknown' }: Skill
       bar: 'bg-zinc-100',
       card: 'neo-card',
     },
+    data_scientist: {
+      tag: 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:bg-white hover:text-black hover:border-white',
+      icon: 'bg-zinc-800 text-zinc-400',
+      bar: 'bg-zinc-100',
+      card: 'neo-card',
+    },
     unknown: {
       tag: 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:bg-white hover:text-black hover:border-white',
       icon: 'bg-zinc-800 text-zinc-400',
@@ -72,7 +78,7 @@ export function SkillGrid({ skills: _skills, focus, persona = 'unknown' }: Skill
     visible: { opacity: 1, y: 0, scale: 1 },
   };
 
-  if (focus === 'breadth') {
+  if (focus === 'broad') {
     // Compact tags view for recruiters
     return (
       <motion.section

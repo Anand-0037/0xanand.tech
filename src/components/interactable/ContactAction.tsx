@@ -3,14 +3,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import type { ContactActionProps, Persona } from '@/lib/schemas';
 import { PORTFOLIO_DATA } from '@/lib/portfolio-data';
-import { Send, Briefcase, Rocket, Loader2 } from 'lucide-react';
+import { Send, Briefcase, Rocket, Loader2, Zap } from 'lucide-react';
 
 interface ContactActionComponentProps extends ContactActionProps {
   persona?: Persona;
 }
 
 export function ContactAction({ intent, prefilledMessage, persona = 'unknown' }: ContactActionComponentProps) {
-  const [selectedIntent, setSelectedIntent] = useState<'hiring' | 'freelance'>(intent);
+  const [selectedIntent, setSelectedIntent] = useState<'hire' | 'partner' | 'audit'>(intent);
   const [message, setMessage] = useState(prefilledMessage || '');
   const [isSending, setIsSending] = useState(false);
 
@@ -22,9 +22,11 @@ export function ContactAction({ intent, prefilledMessage, persona = 'unknown' }:
 
     // Simulate send delay
     setTimeout(() => {
-      const subject = selectedIntent === 'hiring'
+      const subject = selectedIntent === 'hire'
         ? 'Job Opportunity Discussion'
-        : 'Freelance Project Inquiry';
+        : selectedIntent === 'audit'
+        ? 'Technical Audit Request'
+        : 'Partnership Inquiry';
 
       const mailtoLink = `mailto:${profile.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
       window.location.href = mailtoLink;
@@ -55,6 +57,13 @@ export function ContactAction({ intent, prefilledMessage, persona = 'unknown' }:
       border: 'border-emerald-500/20',
       focusRing: 'focus:border-emerald-500/50 focus:ring-emerald-500/20',
     },
+    data_scientist: {
+      active: 'bg-violet-500 text-white',
+      inactive: 'bg-slate-800/50 text-slate-400 hover:bg-slate-700/50',
+      button: 'bg-violet-500 hover:bg-violet-600',
+      border: 'border-violet-500/20',
+      focusRing: 'focus:border-violet-500/50 focus:ring-violet-500/20',
+    },
     unknown: {
       active: 'bg-indigo-500 text-white',
       inactive: 'bg-slate-800/50 text-slate-400 hover:bg-slate-700/50',
@@ -82,8 +91,9 @@ export function ContactAction({ intent, prefilledMessage, persona = 'unknown' }:
         {/* Intent Toggle */}
         <div className="flex gap-3">
           {[
-            { value: 'hiring' as const, label: 'Hiring', icon: <Briefcase size={18} /> },
-            { value: 'freelance' as const, label: 'Freelance', icon: <Rocket size={18} /> },
+            { value: 'hire' as const, label: 'Hiring', icon: <Briefcase size={18} /> },
+            { value: 'partner' as const, label: 'Partner', icon: <Rocket size={18} /> },
+            { value: 'audit' as const, label: 'Audit', icon: <Zap size={18} /> },
           ].map((option) => (
             <motion.button
               key={option.value}
@@ -115,9 +125,11 @@ export function ContactAction({ intent, prefilledMessage, persona = 'unknown' }:
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder={
-              selectedIntent === 'hiring'
+              selectedIntent === 'hire'
                 ? "Tell me about the role and your team..."
-                : "Describe your project and timeline..."
+                : selectedIntent === 'audit'
+                ? "Describe your system architecture review needs..."
+                : "Describe your partnership proposal..."
             }
             className={cn(
               'w-full rounded-xl p-4 resize-none',

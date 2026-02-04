@@ -45,6 +45,11 @@ export function ProofStrip({ metrics, style, persona = 'unknown' }: ProofStripCo
       value: 'from-emerald-400 to-cyan-400',
       bg: 'from-emerald-500/10 to-cyan-500/5',
     },
+    data_scientist: {
+      icon: 'text-violet-400',
+      value: 'from-violet-400 to-indigo-400',
+      bg: 'from-violet-500/10 to-indigo-500/5',
+    },
     unknown: {
       icon: 'text-indigo-400',
       value: 'from-indigo-400 to-purple-400',

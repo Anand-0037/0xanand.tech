@@ -1,8 +1,7 @@
-/* src/index.css */
 @import "tailwindcss";
 
 :root {
-  font-family: "Geist Mono", "Inter", monospace, sans-serif; /* Monospace feels more "Engineer" */
+  font-family: "Geist Mono", "Inter", monospace, sans-serif;
   line-height: 1.5;
   color-scheme: dark;
 }
@@ -13,11 +12,12 @@ body {
   overflow-x: hidden;
 }
 
-/* 1. The Engineering Grid Background */
+/* Engineering Grid Background */
 .bg-grid {
   background-size: 40px 40px;
-  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
   mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
   position: fixed;
   inset: 0;
@@ -25,7 +25,7 @@ body {
   pointer-events: none;
 }
 
-/* 2. Brutalist Card Utility */
+/* Brutalist Card Utility */
 .neo-card {
   background-color: #09090b;
   border: 1px solid #27272a; /* Zinc 800 */
@@ -38,31 +38,54 @@ body {
   box-shadow: 4px 4px 0px 0px rgba(39, 39, 42, 1); /* Hard shadow, no blur */
 }
 
-/* 3. Clean Scrollbar */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #09090b; }
-::-webkit-scrollbar-thumb { background: #27272a; border: 1px solid #09090b; }
-::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+/* Clean Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #09090b;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border: 1px solid #09090b;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
 
-/* 4. Selection */
+/* Selection Styling */
 ::selection {
   background: #fff;
   color: #000;
 }
 
 /* Utilities */
-.text-subtle { color: #a1a1aa; } /* Zinc 400 */
+.text-subtle {
+  color: #a1a1aa;
+} /* Zinc 400 */
 
 /* Performance Optimizations - CSS Animations */
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fade-in {
   animation: fade-in 0.6s ease-out forwards;
 }
 
-.delay-100 { animation-delay: 100ms; }
-.delay-200 { animation-delay: 200ms; }
-.delay-300 { animation-delay: 300ms; }
+.delay-100 {
+  animation-delay: 100ms;
+}
+.delay-200 {
+  animation-delay: 200ms;
+}
+.delay-300 {
+  animation-delay: 300ms;
+}

@@ -1,73 +1,72 @@
-# React + TypeScript + Vite
+# Anand Vashishtha Generative UI Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> A Generative UI system that rebuilds itself based on who is viewing it.
 
-Currently, two official plugins are available:
+![Anand Vashishtha Generative UI Portfolio Banner](https://via.placeholder.com/1200x600/09090b/ffffff?text=Anand+Vashishtha:+Generative+UI+Portfolio)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## The Problem
 
-## React Compiler
+Traditional portfolios are static. A Recruiter wants to see a resume. A Founder wants to see MVP speed. A CTO wants to see system architecture.
+One static interface cannot serve all three masters.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## The Solution: Generative UI
 
-## Expanding the ESLint configuration
+Chameleon is not a static website. It is an **Intent-Adaptive System**.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1.  **Perceives:** It analyzes visitor intent using a hybrid engine (Heuristic + Tambo AI).
+2.  **Reasons:** It determines the optimal content strategy (Recruiter vs. Data Scientist vs. CTO).
+3.  **Adapts:** It **mutates the DOM in real-time**, creating a bespoke layout for that specific user.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## How It Works (The "Dual-Layer" Engine)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Chameleon uses a sophisticated two-step inference model to ensure zero-latency UX with high-intelligence accuracy.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```mermaid
+graph TD
+    A[User Input] -->|Typing| B(Heuristic Engine)
+    B -->|Regex Match| C{Intent Detected?}
+    C -->|Yes| D[Optimistic UI Update]
+    D -->|Instant Feedback| E[UI Mutates Layout]
+
+    A -->|On Submit| F(Tambo AI Agent)
+    F -->|Semantic Analysis| G{Determine Persona}
+    G -->|Recruiter| H[Call: set_portfolio_mode]
+    G -->|CTO| H
+    G -->|Founder| H
+    G -->|Data Scientist| H
+
+    H -->|Execute Tool| I[State Mutation]
+    I -->|Re-render| E
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+1.  **Layer 1: Optimistic Heuristic (0ms)**
+    - Immediate regex-based intent classification.
+    - Provides instant visual feedback (Layout shift).
+2.  **Layer 2: Agentic Confirmation (Async)**
+    - The **Tambo AI** agent analyzes the semantic context.
+    - It executes the `set_portfolio_mode` tool to lock in the persona.
+    - It filters the project database to show only relevant code (e.g., hiding Web3 projects from a Web2 recruiter).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Tech Stack
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **Core:** React 19, TypeScript, Vite 7
+- **AI Engine:** [Tambo AI](https://tambo.ai) (SDK + Tool Calling)
+- **State Mutation:** Framer Motion (Layout Animations)
+- **Styling:** Tailwind CSS v4 (Neo-Brutalist Design)
+
+## Key Features
+
+- **4 Distinct Personas:** Recruiter, Founder, CTO, Data Scientist.
+- **Domain-Aware Project Filtering:** A Data Scientist sees "Model Accuracy." A Founder sees "Time-to-Market."
+- **Agent Engine Optimization (AEO):** Includes `llms.txt` for machine readability.
+
+## Running Locally
+
+```bash
+npm install
+npm run dev
 ```
+
+---
+
+_Built by [Anand Vashishtha](https://0xanand.tech)_

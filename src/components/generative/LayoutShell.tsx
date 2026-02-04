@@ -36,6 +36,7 @@ export function LayoutShell({ mode, emphasis, children }: LayoutShellComponentPr
 
   const spacingStyles = {
     speed: 'py-8 px-4',
+    outcomes: 'py-16 px-8',
     depth: 'py-12 px-6',
   };
 

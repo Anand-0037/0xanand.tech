@@ -106,6 +106,12 @@ function ProjectCard({ project, emphasis, variants, persona, highlight = false }
       tech: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
       border: 'hover:border-emerald-500/40',
     },
+    data_scientist: {
+      type: 'text-violet-400',
+      metric: 'bg-violet-500/10 text-violet-400 border-violet-500/20',
+      tech: 'bg-violet-500/10 text-violet-400 border-violet-500/20',
+      border: 'hover:border-violet-500/40',
+    },
     unknown: {
       type: 'text-indigo-400',
       metric: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
@@ -169,6 +175,7 @@ function ProjectCard({ project, emphasis, variants, persona, highlight = false }
                 persona === 'recruiter' && "bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border-blue-500/30",
                 persona === 'founder' && "bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 border-rose-500/30",
                 persona === 'cto' && "bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border-emerald-500/30",
+                persona === 'data_scientist' && "bg-violet-500/20 hover:bg-violet-500/30 text-violet-400 border-violet-500/30",
                 persona === 'unknown' && "bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-400 border-indigo-500/30"
               )}
             >
@@ -189,9 +196,9 @@ function ProjectCard({ project, emphasis, variants, persona, highlight = false }
             <span className={cn('font-semibold', color.type)}>Key Metrics</span>
           </div>
           <div className="flex flex-wrap gap-2 mb-5">
-            {project.metrics.map((metric) => (
+            {project.metrics?.map((metric, idx) => (
               <span
-                key={metric}
+                key={idx}
                 className={cn('px-3 py-1.5 rounded-full text-sm font-medium border', color.metric)}
               >
                 {metric}

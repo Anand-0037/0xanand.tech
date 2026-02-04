@@ -1,135 +1,101 @@
-import { TamboProvider, type TamboComponent } from '@tambo-ai/react';
-import {
-  LayoutShellSchema,
-  AdaptiveHeroSchema,
-  SkillGridSchema,
-  ProjectShowcaseSchema,
-  ProofStripSchema,
-  ContactActionSchema,
-} from '@/lib/schemas';
-import {
-  LayoutShell,
-  AdaptiveHero,
-  SkillGrid,
-  ProjectShowcase,
-  ProofStrip,
-} from '@/components/generative';
-import { ContactAction } from '@/components/interactable';
+import { z } from 'zod';
+import { TamboProvider, TamboRegistryProvider, type TamboTool, defineTool } from '@tambo-ai/react';
+import type { Persona } from '@/lib/schemas';
 
-// Component registry for Tambo
-export const componentRegistry: TamboComponent[] = [
-  {
-    name: 'LayoutShell',
-    component: LayoutShell,
-    propsSchema: LayoutShellSchema,
-    description: 'Main layout wrapper that controls grid structure based on detected persona mode. ALWAYS render this as the root.',
-  },
-  {
-    name: 'AdaptiveHero',
-    component: AdaptiveHero,
-    propsSchema: AdaptiveHeroSchema,
-    description: 'Dynamic hero section with persona-specific styling. Render this first inside LayoutShell.',
-  },
-  {
-    name: 'SkillGrid',
-    component: SkillGrid,
-    propsSchema: SkillGridSchema,
-    description: 'Skills display that adapts between compact tags and detailed cards.',
-  },
-  {
-    name: 'ProjectShowcase',
-    component: ProjectShowcase,
-    propsSchema: ProjectShowcaseSchema,
-    description: 'Project cards showing outcomes for founders or architecture for CTOs.',
-  },
-  {
-    name: 'ProofStrip',
-    component: ProofStrip,
-    propsSchema: ProofStripSchema,
-    description: 'Credibility metrics strip for immediate social proof. Good for "pitch" mode.',
-  },
-  {
-    name: 'ContactAction',
-    component: ContactAction,
-    propsSchema: ContactActionSchema,
-    description: 'Interactive contact form with hiring/freelance intent toggle. Render this last.',
-  },
-];
+// Schema for the Persona Mode Tool
+export const SetPersonaInputSchema = z.object({
+  mode: z.enum(['recruiter', 'founder', 'cto', 'data_scientist', 'unknown'])
+    .describe('The visitor persona detected from the conversation. Recruiter=hiring/HR/resume/job. Founder=startup/mvp/product/scale. CTO=technical/architecture/code/system. Data Scientist=AI/ML/data/models/research.'),
+  reasoning: z.string()
+    .describe('Brief explanation for the mode selection.'),
+});
+
+export const SetPersonaOutputSchema = z.object({
+  success: z.boolean(),
+  mode: z.string(),
+  reasoning: z.string(),
+});
+
+// Type for the tool params
+export type SetPersonaParams = z.infer<typeof SetPersonaInputSchema>;
+
+// Tool Factory
+// Bridges AI intent with React state updates
+export const createPersonaTool = (
+  setPersona: (p: Persona) => void,
+  setReasoning: (r: string) => void
+): TamboTool<SetPersonaParams, z.infer<typeof SetPersonaOutputSchema>> => {
+  return defineTool({
+    name: 'set_portfolio_mode',
+    description: 'Call this function IMMEDIATELY when the user describes who they are or what they want. It changes the entire website layout to match their needs. Recruiters see resume-style. Founders see pitch-style with outcomes. CTOs see technical deep-dives.',
+    inputSchema: SetPersonaInputSchema,
+    outputSchema: SetPersonaOutputSchema,
+    tool: (params: SetPersonaParams) => {
+      // This runs on the client when the AI decides to call it
+      setPersona(params.mode);
+      setReasoning(params.reasoning);
+      return { success: true, mode: params.mode, reasoning: params.reasoning };
+    },
+  });
+};
 
 // System prompt for persona detection
-// Copy this to the "Custom Instructions" section in your Tambo Dashboard
-export const SYSTEM_PROMPT = `You are Chameleon, an intent-adaptive portfolio orchestrator. Your job is to DESIGN THE PAGE, not to chat. NEVER respond with plain text. ALWAYS render a LayoutShell first, then choose components (AdaptiveHero, SkillGrid, ProjectShowcase) based on whether the user is a Recruiter, Founder, or CTO. Use a professional, engineering-focused tone.
-
-## Core Rules
-1. ALWAYS render components. NEVER output raw text or chat.
-2. ALWAYS start with a LayoutShell component as the root.
-3. ALWAYS detect persona AND technical domain from user input, then adapt the layout accordingly.
+// This function injects the project ID dynamically for maintainability
+export const getSystemPrompt = (projectId: string) => `You are Chameleon, an intent-adaptive portfolio engine (Project: ${projectId}). Your objective is to detect visitor intent and route them to the optimal interface mode.
 
 ## Persona Detection Rules
 Analyze the user's message for these signals:
 
-**Recruiter Signals:** hire, hiring, resume, salary, position, role, candidate, interview, cv, job
-→ Use: mode="resume", vibe="corporate", focus="breadth", emphasis="outcomes", style="minimal"
+**Recruiter Signals:** hire, hiring, resume, salary, position, role, candidate, interview, cv, job, HR, talent
+→ Call: set_portfolio_mode({ mode: "recruiter", reasoning: "..." })
 
-**Founder Signals:** mvp, startup, funding, revenue, business, product, launch, build, scale, customers
-→ Use: mode="pitch", vibe="startup", focus="breadth", emphasis="outcomes", style="prominent"
+**Founder Signals:** mvp, startup, funding, revenue, business, product, launch, build, scale, customers, idea, market
+→ Call: set_portfolio_mode({ mode: "founder", reasoning: "..." })
 
-**CTO Signals:** architecture, scalability, codebase, stack, technical, system, infrastructure, api, engineering
-→ Use: mode="technical", vibe="corporate", focus="depth", emphasis="architecture", style="minimal"
+**CTO Signals:** architecture, scalability, codebase, stack, technical, system, infrastructure, api, engineering, code, patterns
+→ Call: set_portfolio_mode({ mode: "cto", reasoning: "..." })
 
-**Unknown/Default:**
-→ Use: mode="resume", vibe="corporate", focus="breadth", emphasis="outcomes"
+**Data Scientist Signals:** ai, ml, machine learning, data, scientist, model, training, pytorch, research, llm, rag, dataset
+→ Call: set_portfolio_mode({ mode: "data_scientist", reasoning: "..." })
 
-## Domain Detection (NEW - Polymath Engine)
-Detect the user's TECHNICAL DOMAIN from their query and pass the domain prop to LayoutShell AND ProjectShowcase:
+**Unknown:** If the intent is unclear, use mode="unknown"
 
-**Frontend Signals:** react, ui, ux, css, tailwind, component, responsive, design, interface
-→ Set: domain="frontend"
+## Critical Rules
+1. ALWAYS call set_portfolio_mode when you can detect any persona intent.
+2. The "reasoning" field should be 1 sentence explaining the detection.
+3. DO NOT engage in conversation. Your ONLY output is tool calls.
+4. When in doubt, lean toward the most likely persona based on keywords.`;
 
-**Backend Signals:** api, database, server, fastapi, django, postgres, redis, microservice
-→ Set: domain="backend"
-
-**AI/ML Signals:** machine learning, ml, ai, model, llm, gemini, gpt, embedding, inference, training
-→ Set: domain="ai_ml"
-
-**MLOps Signals:** mlops, pipeline, deployment, model serving, feature store, experiment tracking
-→ Set: domain="mlops"
-
-**DevOps Signals:** docker, kubernetes, ci/cd, deployment, infrastructure, terraform, ansible
-→ Set: domain="devops"
-
-**General/Unknown:**
-→ Set: domain="general"
-
-CRITICAL: ALWAYS pass the detected domain to BOTH LayoutShell AND ProjectShowcase components. This enables intelligent project filtering.
-
-## Component Hierarchy
-Always render in this order within LayoutShell:
-1. AdaptiveHero (required - always first)
-2. ProofStrip (highly recommended for founders/recruiters)
-3. SkillGrid (required)
-4. ProjectShowcase (required - MUST include domain prop)
-5. ContactAction (required - always last)
-
-## Available Project IDs
-- kaggle-ingest (tags: ai_ml, backend, mlops, fullstack)
-- dub-wizard (tags: fullstack, backend, ai_ml)
-- json-parser (tags: backend, devops)
-- reminder-system (tags: backend, fullstack)`;
-
-// TamboProvider wrapper component
+// TamboProvider wrapper component with Registry
 interface ChameleonProviderProps {
   children: React.ReactNode;
+  tools?: TamboTool[];
   apiKey?: string;
+  projectId?: string;
 }
 
-export function ChameleonProvider({ children, apiKey }: ChameleonProviderProps) {
+export function ChameleonProvider({ children, tools = [], apiKey, projectId }: ChameleonProviderProps) {
+  const envApiKey = (import.meta.env.VITE_TAMBO_API_KEY as string) ?? '';
+  const envProjectId = (import.meta.env.VITE_TAMBO_PROJECT_ID as string) ?? '';
+
+  const finalApiKey = apiKey ?? envApiKey;
+  const finalProjectId = projectId ?? envProjectId;
+
+  // Validate environment variables are present in development
+  if (import.meta.env.DEV) {
+    if (!finalApiKey) console.warn("Chameleon: VITE_TAMBO_API_KEY is missing from .env");
+    if (!finalProjectId) console.warn("Chameleon: VITE_TAMBO_PROJECT_ID is missing from .env");
+  }
+
   return (
     <TamboProvider
-      apiKey={apiKey || import.meta.env.VITE_TAMBO_API_KEY || ''}
-      components={componentRegistry}
+      apiKey={finalApiKey}
+      // @ts-expect-error - Some versions of SDK require projectId even if types don't reflect it
+      projectId={finalProjectId}
     >
-      {children}
+      <TamboRegistryProvider tools={tools}>
+        {children}
+      </TamboRegistryProvider>
     </TamboProvider>
   );
 }

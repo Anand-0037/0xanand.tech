@@ -32,6 +32,12 @@ export function AdaptiveHero({ headline, subtext, vibe: _vibe, persona = 'unknow
       glow: 'shadow-emerald-500/20',
       badge: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
     },
+    data_scientist: {
+      primary: 'from-violet-500 to-indigo-500',
+      text: 'text-gradient-violet',
+      glow: 'shadow-violet-500/20',
+      badge: 'bg-violet-500/20 text-violet-400 border-violet-500/30',
+    },
     unknown: {
       primary: 'from-slate-500 to-slate-600',
       text: 'text-white',
@@ -66,6 +72,7 @@ export function AdaptiveHero({ headline, subtext, vibe: _vibe, persona = 'unknow
             persona === 'recruiter' && "bg-blue-400",
             persona === 'founder' && "bg-rose-400",
             persona === 'cto' && "bg-emerald-400",
+            persona === 'data_scientist' && "bg-violet-400",
             persona === 'unknown' && "bg-slate-400"
           )} />
           {profile.availability}
@@ -95,6 +102,7 @@ export function AdaptiveHero({ headline, subtext, vibe: _vibe, persona = 'unknow
               persona === 'recruiter' && "text-blue-400",
               persona === 'founder' && "text-rose-400",
               persona === 'cto' && "text-emerald-400",
+              persona === 'data_scientist' && "text-violet-400",
               persona === 'unknown' && "text-indigo-400"
             )} />
             {profile.location}

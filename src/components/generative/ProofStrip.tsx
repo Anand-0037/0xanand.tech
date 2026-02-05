@@ -8,10 +8,10 @@ interface ProofStripComponentProps extends ProofStripProps {
 }
 
 const metricIcons = [
-  { icon: <Clock size={18} />, label: 'Years Experience' },
-  { icon: <Award size={18} />, label: 'Hackathon Wins' },
-  { icon: <Star size={18} />, label: 'Job Success' },
-  { icon: <Zap size={18} />, label: 'Primary Focus' },
+  { icon: <Clock size={18} />, label: 'Current Status' },
+  { icon: <Award size={18} />, label: 'Active Users' },
+  { icon: <Star size={18} />, label: 'Core Tech' },
+  { icon: <Zap size={18} />, label: 'Architecture' },
 ];
 
 export function ProofStrip({ metrics, style, persona = 'unknown' }: ProofStripComponentProps) {

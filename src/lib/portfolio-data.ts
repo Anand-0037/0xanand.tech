@@ -24,6 +24,7 @@ export interface PortfolioData {
     location: string;
     email: string;
     availability: string;
+    resume: string;
   };
   socials: {
     github: string;
@@ -46,7 +47,8 @@ export const PORTFOLIO_DATA: PortfolioData = {
     },
     location: "Ghaziabad, India",
     email: "anandcollege07@gmail.com",
-    availability: "Open for Internships"
+    availability: "Open for Internships",
+    resume: "https://drive.google.com/file/d/1UHC51lu_oZkoFCD3QJ5cWvU-ZFCUmzYH/view?usp=sharing"
   },
   socials: {
     github: "https://github.com/Anand-0037",

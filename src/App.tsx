@@ -9,6 +9,30 @@ import { Send, Sparkles, User, Briefcase, Code, Zap, Brain } from 'lucide-react'
 import { Suspense, lazy } from 'react';
 import { ChameleonProvider, createPersonaTool } from '@/tambo';
 
+// Place this outside the main component in src/App.tsx
+const LogoSVG = () => (
+  <svg
+    width="160"
+    height="40"
+    viewBox="0 0 200 50"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-8 w-auto text-zinc-100"
+  >
+    {/* This mimics a 'written' signature style using SVG text */}
+    <text
+      x="0"
+      y="35"
+      fontFamily="'Mrs Saint Delafield', cursive"
+      fontSize="40"
+      fill="currentColor"
+      style={{ fontWeight: 400 }}
+    >
+      Anand Vashishtha
+    </text>
+  </svg>
+);
+
 // Lazy load heavy components
 const SkillGrid = lazy(() => import('@/components/generative/SkillGrid').then(module => ({ default: module.SkillGrid })));
 const ProjectShowcase = lazy(() => import('@/components/generative/ProjectShowcase').then(module => ({ default: module.ProjectShowcase })));
@@ -80,6 +104,15 @@ function PortfolioContentWithState({
   // Hook into Tambo thread - only use sendThreadMessage, not streaming (streaming can get stuck)
   const { sendThreadMessage } = useTamboThread();
 
+  // 1. ADD: Reset Handler
+  const handleLogoClick = useCallback(() => {
+    setCurrentPersona('unknown'); // Reset to default state
+    setAiReasoning('');           // Clear any AI messages
+    setInput('');                 // Clear the input box
+    if (inputRef.current) inputRef.current.value = ''; // Clear DOM ref
+    window.scrollTo({ top: 0, behavior: 'smooth' });   // Scroll to top
+  }, [setCurrentPersona, setAiReasoning]);
+
   const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!input.trim() || isProcessing) return;
@@ -135,10 +168,10 @@ function PortfolioContentWithState({
 
     try {
       console.log('Chameleon: Quick prompt:', prompt);
-      
-      // RACE CONDITION: Fail if AI takes longer than 10s
+
+      // 1. TIMEOUT UPDATE: Change 10000 to 3000 (3 seconds)
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Request timed out after 10s')), 10000)
+        setTimeout(() => reject(new Error('Request timed out after 3s')), 3000)
       );
 
       await Promise.race([
@@ -181,11 +214,15 @@ function PortfolioContentWithState({
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-zinc-950/80 backdrop-blur-sm border-b border-zinc-800">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="font-mono text-sm tracking-widest uppercase text-zinc-400">
-              Anand Vashishtha
-            </span>
-          </div>
+
+          {/* 2. UPDATE: Clickable SVG Logo */}
+          <button
+            onClick={handleLogoClick}
+            className="flex items-center gap-3 hover:opacity-80 transition-opacity focus:outline-none"
+            aria-label="Back to Home"
+          >
+            <LogoSVG />
+          </button>
 
           {/* Persona indicator */}
           <AnimatePresence mode="wait">
@@ -303,12 +340,33 @@ function PortfolioContentWithState({
             </motion.button>
           </motion.div>
 
-          {/* Quick prompts */}
-          <div className="grid grid-cols-2 xs:grid-cols-3 sm:flex sm:flex-wrap justify-center gap-2 mt-4 pb-12 w-full px-4 max-w-lg mx-auto relative z-[101]">
+          {/* 2. UI UPDATE: 4 Distinct Buttons for each Persona */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4 pb-12 w-full px-4 max-w-2xl mx-auto relative z-[101]">
             {[
-              { label: 'Startup', prompt: "I'm building an MVP", persona: 'founder' as Persona },
-              { label: 'Technical', prompt: "Show me your technical skills", persona: 'cto' as Persona },
-              { label: 'ML/AI', prompt: "Show me your ML research", persona: 'data_scientist' as Persona },
+              {
+                label: 'Recruiter',
+                prompt: "I am hiring. Show me your resume and experience.",
+                persona: 'recruiter' as Persona,
+                icon: "Briefcase"
+              },
+              {
+                label: 'Founder',
+                prompt: "I have a startup idea. Can you build an MVP?",
+                persona: 'founder' as Persona,
+                icon: "Rocket"
+              },
+              {
+                label: 'CTO',
+                prompt: "Show me your system architecture and code patterns.",
+                persona: 'cto' as Persona,
+                icon: "Code"
+              },
+              {
+                label: 'Researcher',
+                prompt: "Show me your ML models and Kaggle work.",
+                persona: 'data_scientist' as Persona,
+                icon: "Brain"
+              },
             ].map((item) => (
               <motion.button
                 key={item.label}
@@ -317,15 +375,17 @@ function PortfolioContentWithState({
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
                 className={cn(
-                  'px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-[10px] xs:text-xs sm:text-sm font-medium backdrop-blur-md flex-shrink-0',
-                  'border transition-all duration-300 min-w-[80px] text-center',
+                  'px-3 py-3 rounded-xl text-xs sm:text-sm font-medium backdrop-blur-md',
+                  'border transition-all duration-300 text-center flex flex-col items-center gap-2',
+                  // Specific styling for each button to make them distinct
                   item.persona === 'recruiter' && 'bg-blue-500/10 text-blue-400 border-blue-500/30 hover:bg-blue-500/20',
                   item.persona === 'founder' && 'bg-rose-500/10 text-rose-400 border-rose-500/30 hover:bg-rose-500/20',
                   item.persona === 'cto' && 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20',
                   item.persona === 'data_scientist' && 'bg-violet-500/10 text-violet-400 border-violet-500/30 hover:bg-violet-500/20'
                 )}
               >
-                {item.label}
+                {/* You can add Lucide icons here if you import them, otherwise just text is fine */}
+                <span>{item.label}</span>
               </motion.button>
             ))}
           </div>
@@ -349,7 +409,14 @@ function PortfolioContentWithState({
           {(currentPersona === 'recruiter' || currentPersona === 'founder' || currentPersona === 'data_scientist' || currentPersona === 'unknown') && (
             <Suspense fallback={<div className="h-32 animate-pulse bg-zinc-900/50 rounded-2xl" />}>
               <ProofStrip
-                metrics={['20+ Repos', '2 Degrees', '98% mAP', 'Web3 & AI']}
+                // LOGIC: Custom bragging rights per persona
+                metrics={
+                  currentPersona === 'founder'
+                    ? ['2 SaaS Live', '500+ Users', 'FastAPI', 'Micro-SaaS']  // Founder cares about traction
+                    : currentPersona === 'data_scientist'
+                    ? ['98% mAP', 'YOLOv8', 'RAG Pipeline', 'Kaggle Master']  // Researcher cares about accuracy
+                    : ['2 SaaS Live', '20+ Repos', '3 Hackathons', 'Full Stack'] // Default/Recruiter mix
+                }
                 style={currentPersona === 'founder' ? 'prominent' : 'minimal'}
                 persona={currentPersona}
               />

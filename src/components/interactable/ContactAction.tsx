@@ -28,7 +28,7 @@ export function ContactAction({ intent, prefilledMessage, persona = 'unknown' }:
       : 'Partnership Inquiry';
 
     const mailtoLink = `mailto:${profile.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
-    
+
     // Open immediately
     window.location.href = mailtoLink;
     setIsSending(false);

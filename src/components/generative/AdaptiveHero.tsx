@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import type { AdaptiveHeroProps } from '@/lib/schemas';
 import type { Persona } from '@/lib/schemas';
 import { PORTFOLIO_DATA } from '@/lib/portfolio-data';
-import { Github, Linkedin, Mail, MapPin, ExternalLink, Twitter } from 'lucide-react';
+import { Github, Linkedin, Mail, MapPin, ExternalLink, Twitter, FileText } from 'lucide-react';
 
 interface AdaptiveHeroComponentProps extends AdaptiveHeroProps {
   persona?: Persona;
@@ -114,8 +114,23 @@ export function AdaptiveHero({ headline, subtext, vibe: _vibe, persona = 'unknow
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.45, duration: 0.5 }}
-          className="flex gap-3"
+          className="flex gap-3 flex-wrap"
         >
+          {/* 4. RESUME LOGIC: Only show for Recruiter or Unknown mode */}
+          {(persona === 'recruiter' || persona === 'unknown') && (
+            <motion.a
+              href={profile.resume}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Download Resume"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-4 py-3 flex items-center gap-2 rounded-lg font-medium transition-all duration-300 bg-white text-black hover:bg-zinc-200"
+            >
+              <FileText size={18} />
+              <span>Resume</span>
+            </motion.a>
+          )}
           {[
             { href: socials.github, icon: <Github size={20} />, label: 'GitHub', id: 'github' },
             { href: socials.linkedin, icon: <Linkedin size={20} />, label: 'LinkedIn', id: 'linkedin' },
